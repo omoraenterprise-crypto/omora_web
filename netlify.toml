@@ -1,0 +1,46 @@
+# ============================================
+# Configuración de Netlify para OMORA
+# Publica todo el repo desde la raíz
+# ============================================
+
+[build]
+  publish = "."
+  # Si en algún momento agregás un paso de build (npm run build, etc.)
+  # command = "npm run build"
+
+# --------------------------------------------
+# Redirect: la raíz del sitio muestra Inicio
+# --------------------------------------------
+[[redirects]]
+  from = "/"
+  to = "/Inicio/index.html"
+  status = 200
+
+# --------------------------------------------
+# Redirects "bonitos" opcionales (URLs limpias)
+# Así podés usar /login en vez de /Login/login.html
+# --------------------------------------------
+[[redirects]]
+  from = "/login"
+  to = "/Login/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/descargar"
+  to = "/Inicio/Descargar.html"
+  status = 200
+
+[[redirects]]
+  from = "/inicio"
+  to = "/Inicio/index.html"
+  status = 200
+
+# --------------------------------------------
+# Fallback: si alguien entra a una ruta que no existe,
+# lo mandamos al inicio en vez de mostrar 404
+# (Opcional: comentá esto si preferís mantener el 404 real)
+# --------------------------------------------
+# [[redirects]]
+#   from = "/*"
+#   to = "/Inicio/index.html"
+#   status = 404
