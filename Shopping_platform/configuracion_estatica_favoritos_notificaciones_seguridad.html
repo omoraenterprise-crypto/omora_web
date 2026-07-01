@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favoritos • Notificaciones • Seguridad | Omora</title>
+
+  <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      --violet:#6A5ACD;
+      --orange:#FF9F43;
+      --red:#E24B4A;
+      --green:#2ECC71;
+      --bg:#F4F3FB;
+      --surface:#FFFFFF;
+      --border:#E8E6F5;
+      --text:#18171F;
+      --muted:#7B7995;
+      --shadow:0 10px 30px rgba(106,90,205,.12);
+      --radius:22px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;}
+    .wrap{width:min(980px,100%);padding:26px 16px 120px;}
+    .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .back{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;}
+    .back i{color:var(--violet)}
+    .headerCard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px;margin-bottom:16px;}
+    .hTitle{font-size:22px;font-weight:900;}
+    .hSub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;}
+    @media (max-width:860px){.grid{grid-template-columns:1fr;}}
+
+    .card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+    .card h2{font-size:16px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+    .card h2 i{color:var(--violet)}
+
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .row:last-child{border-bottom:none}
+    .rowLeft{display:flex;align-items:center;gap:10px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(106,90,205,.10);color:var(--violet);font-weight:800;font-size:12px;border:1px solid rgba(106,90,205,.20)}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:16px;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);font-weight:900;}
+    .btnPrimary{background:var(--violet);border-color:rgba(0,0,0,0);color:white}
+    .btnDanger{background:rgba(226,75,74,.08);border-color:rgba(226,75,74,.25);color:var(--red)}
+
+    .list{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
+    .favItem{display:flex;gap:12px;align-items:center;border:1px solid var(--border);background:var(--bg);border-radius:18px;padding:10px;}
+    .favItem img{width:52px;height:52px;border-radius:14px;object-fit:cover;background:#fff}
+    .favMeta{flex:1;min-width:0}
+    .favName{font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .favPrice{margin-top:4px;color:var(--violet);font-weight:900;font-size:13px}
+
+    .toggle{display:flex;align-items:center;gap:12px;}
+    .switch{width:46px;height:28px;border-radius:999px;border:1.5px solid var(--border);background:rgba(123,121,149,.15);position:relative;cursor:pointer;}
+    .switch::after{content:'';position:absolute;top:50%;transform:translateY(-50%);left:4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid var(--border);transition:.2s;}
+    .switch.on{background:rgba(106,90,205,.20);border-color:rgba(106,90,205,.35)}
+    .switch.on::after{left:22px;background:var(--violet)}
+
+    .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;}
+    .toast.show{opacity:1}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <button class="back" onclick="history.back()" type="button"><i class="fa-solid fa-arrow-left"></i>Volver</button>
+    </div>
+
+    <div class="headerCard">
+      <div class="hTitle"><i class="fa-solid fa-user-shield" style="color:var(--violet); margin-right:10px"></i>Favoritos • Notificaciones • Seguridad</div>
+      <div class="hSub">Pantalla de configuración lista para integrarla con Firebase. Conserva estilos y lógica parecida a tu móvil (React Native).</div>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2><i class="fa-regular fa-heart"></i>Mis Favoritos</h2>
+        <div class="row">
+          <div class="rowLeft"><span class="pill"><i class="fa-solid fa-heart"></i><span id="favCount">0</span> guardados</span></div>
+          <button class="btn btnDanger" type="button" id="clearFavsBtn"><i class="fa-solid fa-trash"></i>Limpiar</button>
+        </div>
+        <div id="favList" class="list"></div>
+        <div id="favEmpty" class="muted" style="margin-top:14px;display:none;">Sin favoritos todavía.</div>
+      </section>
+
+      <aside class="card">
+        <h2><i class="fa-solid fa-bell"></i>Notificaciones</h2>
+        <div class="row">
+          <div class="rowLeft"><i class="fa-solid fa-bag-shopping" style="color:var(--violet)"></i><div><div style="font-weight:900;font-size:13px">Nuevas ofertas</div><div class="muted" style="font-size:12px">Solo relevantes</div></div></div>
+          <div class="toggle"><div class="switch on" id="notifOffers"></div></div>
+        </div>
+        <div class="row">
+          <div class="rowLeft"><i class="fa-solid fa-store" style="color:var(--orange)"></i><div><div style="font-weight:900;font-size:13px">Tiendas que sigues</div><div class="muted" style="font-size:12px">Novedades</div></div></div>
+          <div class="toggle"><div class="switch" id="notifStores"></div></div>
+        </div>
+        <div class="row" style="border-bottom:none;">
+          <div class="rowLeft"><i class="fa-solid fa-lock" style="color:var(--red)"></i><div><div style="font-weight:900;font-size:13px">Seguridad</div><div class="muted" style="font-size:12px">Actividad sensible</div></div></div>
+          <div class="toggle"><div class="switch" id="notifSecurity"></div></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btnPrimary" type="button" id="saveNotifBtn"><i class="fa-solid fa-floppy-disk"></i>Guardar</button>
+          <button class="btn" type="button" id="resetNotifBtn"><i class="fa-solid fa-rotate-left"></i>Reset</button>
+        </div>
+
+        <h2 style="margin-top:18px"><i class="fa-solid fa-user-shield"></i>Seguridad</h2>
+        <div class="muted" style="font-size:12px;line-height:1.5;margin-top:-4px;">Este demo simula acciones. Para producción, usa Firebase Auth + reglas.</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+          <button class="btn" type="button" id="changePassBtn"><i class="fa-solid fa-key"></i>Cambiar contraseña</button>
+          <button class="btn" type="button" id="logoutBtn"><i class="fa-solid fa-right-from-bracket" style="color:var(--red)"></i>Cerrar sesión</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, collection, onSnapshot, deleteDoc, serverTimestamp, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Firebase config (igual a tu Shopping_platform)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtGVfaEKbVXWCvTvA3t_XRZ6PK28pL5rc",
+      authDomain: "omora-55e66.firebaseapp.com",
+      projectId: "omora-55e66",
+      storageBucket: "omora-55e66.firebasestorage.app",
+      messagingSenderId: "860384804554",
+      appId: "1:860384804554:web:d59b9e0732619814d1be33"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const $ = (id)=>document.getElementById(id);
+    const toast = (msg)=>{
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), 2200);
+    };
+
+    const state = {
+      uid: null,
+      favorites: [],
+      notif: {
+        offers: true,
+        stores: false,
+        security: false
+      }
+    };
+
+    function syncSwitchUI(){
+      $('notifOffers').classList.toggle('on', !!state.notif.offers);
+      $('notifStores').classList.toggle('on', !!state.notif.stores);
+      $('notifSecurity').classList.toggle('on', !!state.notif.security);
+    }
+
+    const bindSwitch = (elId, key)=>{
+      const el = $(elId);
+      el.addEventListener('click', ()=>{
+        state.notif[key] = !state.notif[key];
+        syncSwitchUI();
+      });
+    };
+
+    bindSwitch('notifOffers','offers');
+    bindSwitch('notifStores','stores');
+    bindSwitch('notifSecurity','security');
+    syncSwitchUI();
+
+    function renderFavs(){
+      $('favCount').textContent = state.favorites.length;
+      const list = $('favList');
+      list.innerHTML = '';
+      if(state.favorites.length===0){ $('favEmpty').style.display='block'; return; }
+      $('favEmpty').style.display='none';
+
+      state.favorites.forEach(f=>{
+        const item = document.createElement('div');
+        item.className='favItem';
+        item.innerHTML = `
+          <img src="${f.image || 'https://via.placeholder.com/80'}" alt="${f.name || 'Producto'}" />
+          <div class="favMeta">
+            <div class="favName">${f.name || 'Sin nombre'}</div>
+            <div class="favPrice">${f.price ? '$'+Number(f.price).toLocaleString('es-CO') : ''}</div>
+          </div>
+          <button class="btn" style="padding:10px 12px" type="button" data-remove="${f.id}"><i class="fa-solid fa-trash"></i></button>
+        `;
+
+        item.querySelector('[data-remove]').addEventListener('click', async ()=>{
+          if(!state.uid) return;
+          try {
+            await deleteDoc(doc(db, 'usuarios', state.uid, 'favoritos', f.id));
+            toast('Eliminado de favoritos');
+          } catch {
+            toast('Error al eliminar favorito');
+          }
+        });
+
+        list.appendChild(item);
+      });
+    }
+
+    // Favorites subscription
+    let unsubFavs = null;
+    function subscribeFavs(){
+      if(!state.uid) return;
+      if(unsubFavs) unsubFavs();
+      const favCol = collection(db, 'usuarios', state.uid, 'favoritos');
+      unsubFavs = onSnapshot(favCol, (snap)=>{
+        state.favorites = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderFavs();
+      }, ()=>{
+        toast('No se pudieron cargar favoritos');
+      });
+    }
+
+    // Notifications: store in usuarios/{uid}/preferenciasNotificaciones (o en un doc dedicado)
+    let unsubNotif = null;
+    async function loadNotif(){
+      if(!state.uid) return;
+      const prefRef = doc(db, 'usuarios', state.uid, 'preferencias', 'notificaciones');
+      const snap = await getDoc(prefRef);
+      const data = snap.exists()? snap.data() : {};
+      state.notif = {
+        offers: data.offers ?? true,
+        stores: data.stores ?? false,
+        security: data.security ?? false,
+      };
+      syncSwitchUI();
+    }
+
+    async function saveNotif(){
+      if(!state.uid) return;
+      const prefRef = doc(db, 'usuarios', state.uid, 'preferencias', 'notificaciones');
+      await setDoc(prefRef, {
+        offers: !!state.notif.offers,
+        stores: !!state.notif.stores,
+        security: !!state.notif.security,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+      toast('Notificaciones guardadas ✓');
+    }
+
+    $('saveNotifBtn').addEventListener('click', async ()=>{
+      try { await saveNotif(); } catch { toast('Error al guardar'); }
+    });
+
+    $('resetNotifBtn').addEventListener('click', async ()=>{
+      state.notif = { offers:true, stores:false, security:false };
+      syncSwitchUI();
+      try {
+        await saveNotif();
+        toast('Notificaciones reseteadas');
+      } catch {
+        toast('Error al resetear');
+      }
+    });
+
+    // Clear all favorites
+    $('clearFavsBtn').addEventListener('click', async ()=>{
+      if(!state.uid) return;
+      if(!confirm('¿Eliminar todos los favoritos?')) return;
+      try {
+        const favCol = collection(db, 'usuarios', state.uid, 'favoritos');
+        const snap = await getDocs(favCol);
+        await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+        toast('Favoritos limpiados');
+      } catch {
+        toast('Error al limpiar favoritos');
+      }
+    });
+
+    // Security actions (demo). Para cambiar contraseña real usa Firebase Auth methods con reautenticación.
+    $('changePassBtn').addEventListener('click', ()=>{
+      toast('Cambiar contraseña: implementar con Firebase Auth (reautenticación).');
+    });
+
+    $('logoutBtn').addEventListener('click', async ()=>{
+      try {
+        await signOut(auth);
+      } catch {}
+    });
+
+    // Auth gate + init
+    onAuthStateChanged(auth, (user)=>{
+      if(!user){
+        state.uid = null;
+        window.location.href = '../Login/login.html';
+        return;
+      }
+      state.uid = user.uid;
+      loadNotif().then(()=> subscribeFavs());
+      toast('Conectado ✓');
+    });
+  </script>
+</body>
+</html>
+

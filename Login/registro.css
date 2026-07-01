@@ -1,0 +1,308 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  overflow-y: auto; /* ← antes era hidden, cortaba el formulario */
+}
+
+/* ── FONDO ───────────────────────────────────────── */
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* ── CONTENIDO ───────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100vh;   /* ← min en vez de height fijo */
+  padding: 40px;
+  gap: 40px;
+  align-items: center; /* centra verticalmente hero y card */
+}
+
+/* ── TEXTO HERO ──────────────────────────────────── */
+.hero {
+  flex: 1;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+}
+
+.hero h3 {
+  margin-top: 10px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.hero p {
+  margin-top: 20px;
+  max-width: 400px;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* ── CARD ────────────────────────────────────────── */
+.login-card {
+  width: 400px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.97);
+  padding: 32px 28px;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+
+  /* Permite scroll interno si la pantalla es muy pequeña */
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #6805b9;
+  font-size: 1.5rem;
+}
+
+/* ── INPUTS ──────────────────────────────────────── */
+.login-card input[type="text"],
+.login-card input[type="email"],
+.login-card input[type="password"],
+.login-card input[type="tel"],
+.login-card input[type="date"] {
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 11px;
+  border-radius: 9px;
+  border: 1.5px solid #ddd;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.login-card input:focus {
+  border-color: #6805b9;
+}
+
+/* ── ROLES ───────────────────────────────────────── */
+.roles-label {
+  font-weight: 600;
+  color: #444;
+  margin: 8px 0 10px;
+  font-size: 14px;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.role-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 8px;
+  background: #f4f1ff;
+  border: 2px solid #e0d9ff;
+  border-radius: 11px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: #555;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.role-btn:hover {
+  background: #ede8ff;
+  border-color: #6805b9;
+  color: #6805b9;
+}
+
+.role-btn.selected {
+  background: #6805b9;
+  border-color: #6805b9;
+  color: white;
+}
+
+.role-btn-solo {
+  grid-column: 1 / -1; /* ocupa las dos columnas */
+}
+
+.role-icon {
+  font-size: 17px;
+}
+
+.role-error {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+/* ── BOTÓN SUBMIT ────────────────────────────────── */
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  background: #6805b9;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.login-btn:hover {
+  background: #5a04a0;
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* ── LINKS ───────────────────────────────────────── */
+.links {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.links a {
+  color: #6805b9;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* ── DARK MODE ───────────────────────────────────── */
+body.dark .login-card {
+  background: rgba(30, 20, 50, 0.96);
+  color: #eee;
+}
+
+body.dark .login-card h2 {
+  color: #c084fc;
+}
+
+body.dark .login-card input {
+  background: #2a1f3d;
+  border-color: #4a3870;
+  color: #eee;
+}
+
+body.dark .login-card input::placeholder {
+  color: #888;
+}
+
+body.dark .role-btn {
+  background: #2a1f3d;
+  border-color: #4a3870;
+  color: #ccc;
+}
+
+body.dark .role-btn:hover {
+  border-color: #c084fc;
+  color: #c084fc;
+}
+
+body.dark .role-btn.selected {
+  background: #6805b9;
+  border-color: #6805b9;
+  color: white;
+}
+
+body.dark .roles-label {
+  color: #ccc;
+}
+
+body.dark .links a {
+  color: #c084fc;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    gap: 24px;
+  }
+
+  .hero {
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .hero p {
+    max-width: 100%;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 440px;
+    max-height: none; /* en móvil no limitar altura */
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .roles-grid {
+    grid-template-columns: 1fr; /* una columna en pantallas muy pequeñas */
+  }
+
+  .role-btn-solo {
+    grid-column: 1;
+  }
+}

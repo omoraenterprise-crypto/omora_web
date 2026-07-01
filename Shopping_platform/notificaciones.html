@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notificaciones | Omora</title>
+
+  <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root{--violet:#6A5ACD;--orange:#FF9F43;--red:#E24B4A;--bg:#F4F3FB;--surface:#fff;--border:#E8E6F5;--text:#18171F;--muted:#7B7995;--shadow:0 10px 30px rgba(106,90,205,.12);--radius:22px;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;}
+    .wrap{width:min(980px,100%);padding:26px 16px 120px;}
+    .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .back{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;}
+    .back i{color:var(--violet)}
+    .headerCard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px;margin-bottom:16px;}
+    .hTitle{font-size:22px;font-weight:900;}
+    .hSub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+
+    .card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px;}
+    .card h2{font-size:16px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+    .card h2 i{color:var(--violet)}
+
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .row:last-child{border-bottom:none}
+    .rowLeft{display:flex;align-items:center;gap:10px;}
+
+    .muted{color:var(--muted);}
+
+    .toggle{display:flex;align-items:center;gap:12px;}
+    .switch{width:46px;height:28px;border-radius:999px;border:1.5px solid var(--border);background:rgba(123,121,149,.15);position:relative;cursor:pointer;flex-shrink:0;}
+    .switch::after{content:'';position:absolute;top:50%;transform:translateY(-50%);left:4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid var(--border);transition:.2s;}
+    .switch.on{background:rgba(106,90,205,.20);border-color:rgba(106,90,205,.35)}
+    .switch.on::after{left:22px;background:var(--violet)}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:16px;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);font-weight:900;width:100%;}
+    .btnPrimary{background:var(--violet);border-color:rgba(0,0,0,0);color:white}
+
+    .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <button class="back" onclick="history.back()" type="button"><i class="fa-solid fa-arrow-left"></i>Volver</button>
+    </div>
+
+    <div class="headerCard">
+      <div class="hTitle"><i class="fa-solid fa-bell" style="color:var(--violet); margin-right:10px"></i>Notificaciones</div>
+      <div class="hSub">Configura tus alertas (demo). En producción, guarda en Firestore según tu diseño.</div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-bag-shopping"></i> Compras y pedidos</h2>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-circle-check" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Compra confirmada</div>
+            <div class="muted" style="font-size:12px">Te avisamos cuando tu pago se procese correctamente</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="compraConfirmada" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-truck-fast" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Envíos y entregas</div>
+            <div class="muted" style="font-size:12px">Estado de despacho, tránsito y entrega de tu pedido</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="enviosEntregas" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-cart-shopping" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Carrito abandonado</div>
+            <div class="muted" style="font-size:12px">Recordatorio si dejas productos sin finalizar la compra</div>
+          </div>
+        </div>
+        <div class="switch" data-key="carritoAbandonado" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-rotate-left" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Cambios y devoluciones</div>
+            <div class="muted" style="font-size:12px">Actualizaciones sobre solicitudes de cambio o reembolso</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="cambiosDevoluciones" onclick="toggleSwitch(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-tag"></i> Ofertas y promociones</h2>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-tag" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Nuevas ofertas</div>
+            <div class="muted" style="font-size:12px">Descuentos y promociones especiales para ti</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="nuevasOfertas" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-star" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Productos recomendados</div>
+            <div class="muted" style="font-size:12px">Sugerencias según tus compras y gustos</div>
+          </div>
+        </div>
+        <div class="switch" data-key="productosRecomendados" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-gift" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Cupones y beneficios</div>
+            <div class="muted" style="font-size:12px">Cupones exclusivos y beneficios de tu cuenta</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="cuponesBeneficios" onclick="toggleSwitch(this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-comment-dots"></i> General</h2>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-envelope" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Notificaciones por correo</div>
+            <div class="muted" style="font-size:12px">Recibe un resumen también en tu email</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="correo" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-mobile-screen-button" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Notificaciones push</div>
+            <div class="muted" style="font-size:12px">Alertas directas en tu dispositivo</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="push" onclick="toggleSwitch(this)"></div>
+      </div>
+    </div>
+
+    <button class="btn btnPrimary" onclick="guardarPreferencias()" type="button">
+      <i class="fa-solid fa-floppy-disk"></i> Guardar preferencias
+    </button>
+  </div>
+
+  <div class="toast" id="toast">Preferencias guardadas</div>
+
+  <script>
+    function toggleSwitch(el){
+      el.classList.toggle('on');
+    }
+
+    function guardarPreferencias(){
+      const switches = document.querySelectorAll('.switch');
+      const prefs = {};
+      switches.forEach(s => {
+        prefs[s.dataset.key] = s.classList.contains('on');
+      });
+
+      // Demo: en producción, aquí guardarías `prefs` en Firestore
+      // Ejemplo:
+      // await setDoc(doc(db, "usuarios", uid, "config", "notificaciones"), prefs, { merge: true });
+      console.log('Preferencias de notificaciones:', prefs);
+
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+  </script>
+</body>
+</html>

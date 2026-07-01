@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>OMORA | Mensajes</title>
+  <link rel="stylesheet" href="dm.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="topbar">
+  <div class="logo">🐾 OMORA</div>
+  <div class="user-status" id="status">● Online</div>
+</header>
+
+<div class="dm-container">
+
+  <!-- LISTA DE CHATS -->
+  <aside class="dm-sidebar">
+    <h3>Chats</h3>
+
+    <div class="dm-user active" data-user="Fundación Patitas">
+      <img src="https://i.pravatar.cc/150?img=3">
+      <span>Fundación Patitas</span>
+    </div>
+
+    <div class="dm-user" data-user="Ana Gómez">
+      <img src="https://i.pravatar.cc/150?img=5">
+      <span>Ana Gómez</span>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <section class="dm-chat">
+    <div class="chat-header">
+      <strong id="chatName">Fundación Patitas</strong>
+      <span id="typing"></span>
+    </div>
+
+    <div class="chat-messages" id="messages"></div>
+
+    <div class="chat-input">
+      <input id="textInput" placeholder="Escribe un mensaje…">
+      <button id="sendBtn">➤</button>
+    </div>
+  </section>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="dm.js"></script>
+</body>
+</html>

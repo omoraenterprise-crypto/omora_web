@@ -1,0 +1,254 @@
+/* Descargar.css — estilos específicos de la página "Descargar OMORA" */
+
+:root{
+  --violet:#5c3cfb;
+  --violet-dark:#4a2fd6;
+  --bg:#F4F3FB;
+  --surface:#ffffff;
+  --border:#E8E6F5;
+  --text:#18171F;
+  --muted:#7B7995;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Inter', sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 40px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.logo{
+  font-weight:700;
+  font-size:20px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.logo span{
+  color:var(--violet);
+}
+
+.nav{
+  display:flex;
+  gap:28px;
+}
+
+.nav a{
+  color:var(--text);
+  text-decoration:none;
+  font-weight:500;
+  font-size:14px;
+  transition:.15s;
+}
+
+.nav a:hover{
+  color:var(--violet);
+}
+
+.header-actions .btn-login{
+  display:inline-block;
+  padding:10px 20px;
+  border-radius:12px;
+  background:var(--violet);
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
+  transition:.15s;
+}
+
+.header-actions .btn-login:hover{
+  background:var(--violet-dark);
+}
+
+/* HERO DESCARGA */
+.descarga-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:60px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 40px;
+  flex-wrap:wrap;
+}
+
+.descarga-texto{
+  flex:1;
+  min-width:320px;
+}
+
+.descarga-texto h1{
+  font-size:42px;
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:20px;
+}
+
+.descarga-texto p{
+  font-size:16px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:32px;
+  max-width:460px;
+}
+
+.descarga-botones{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.badge-descarga{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--text);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:14px;
+  text-decoration:none;
+  transition:.15s;
+}
+
+.badge-descarga:hover{
+  background:var(--violet-dark);
+}
+
+.badge-texto{
+  display:flex;
+  flex-direction:column;
+  line-height:1.2;
+}
+
+.badge-small{
+  font-size:11px;
+  opacity:.8;
+}
+
+.badge-big{
+  font-size:16px;
+  font-weight:700;
+}
+
+/* MOCKUP DE TELEFONO */
+.descarga-imagen{
+  flex:1;
+  min-width:280px;
+  display:flex;
+  justify-content:center;
+}
+
+.phone-mockup{
+  width:260px;
+  height:520px;
+  background:var(--text);
+  border-radius:40px;
+  padding:14px;
+  box-shadow:0 30px 60px rgba(92,60,251,.25);
+  position:relative;
+}
+
+.phone-notch{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  width:100px;
+  height:22px;
+  background:var(--text);
+  border-radius:0 0 16px 16px;
+  z-index:2;
+}
+
+.phone-screen{
+  width:100%;
+  height:100%;
+  background:linear-gradient(160deg, var(--violet) 0%, #8b6cff 100%);
+  border-radius:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:30px;
+}
+
+.phone-app-logo{
+  font-size:48px;
+}
+
+.phone-app-nombre{
+  color:#fff;
+  font-weight:700;
+  font-size:22px;
+  letter-spacing:1px;
+}
+
+.phone-app-linea{
+  width:70%;
+  height:8px;
+  background:rgba(255,255,255,.35);
+  border-radius:999px;
+  margin-top:20px;
+}
+
+.phone-app-linea.corta{
+  width:45%;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  padding:24px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid var(--border);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px){
+  .header{
+    padding:16px 20px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .nav{
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .descarga-hero{
+    padding:50px 24px;
+    text-align:center;
+    justify-content:center;
+  }
+  .descarga-texto h1{
+    font-size:30px;
+  }
+  .descarga-texto p{
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .descarga-botones{
+    justify-content:center;
+  }
+}

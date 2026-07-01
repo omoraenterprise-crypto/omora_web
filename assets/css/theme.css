@@ -1,0 +1,28 @@
+/* =========================
+   CONFIGURACIÓN DE TEMA
+========================= */
+
+/* TEMA CLARO (DEFAULT) */
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --card: #f3f3f3;
+  --accent: #ff7a18;
+
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --overlay: rgba(35, 14, 59, 0.6);
+  --btn-primary: #5bc0de;
+  --btn-hover: #4301dd;
+}
+
+/* TEMA OSCURO */
+html.dark {
+  --bg: #0f0f0f;
+  --text: #ffffff;
+  --card: #1e1e1e;
+
+  --header-bg: rgba(15, 15, 15, 0.9);
+  --overlay: rgba(0, 0, 0, 0.65);
+  --btn-primary: #4301dd;
+  --btn-hover: #5bc0de;
+}

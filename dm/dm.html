@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensajes | OMORA</title>
+  <link rel="stylesheet" href="dm.css">
+</head>
+<body>
+
+<div class="dm-container">
+
+  <!-- SIDEBAR -->
+  <aside class="dm-sidebar">
+    <div class="dm-header">Mensajes</div>
+
+    <div class="dm-user active">
+      <img src="https://i.pravatar.cc/150?img=3">
+      <div>
+        <strong>Fundación Patitas</strong>
+        <span>En línea</span>
+      </div>
+    </div>
+
+    <div class="dm-user">
+      <img src="https://i.pravatar.cc/150?img=5">
+      <div>
+        <strong>Ana Gómez</strong>
+        <span>Último mensaje</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <section class="dm-chat">
+
+    <!-- HEADER CHAT -->
+    <div class="chat-header">
+      <img src="https://i.pravatar.cc/150?img=3">
+      <div>
+        <strong>Fundación Patitas</strong>
+        <span>Activo ahora</span>
+      </div>
+    </div>
+
+    <!-- MENSAJES -->
+    <div class="chat-messages" id="messages">
+      <div class="message received">Hola 👋 ¿En qué podemos ayudarte?</div>
+    </div>
+
+    <!-- INPUT -->
+    <div class="chat-input">
+      <label class="icon">
+        📎
+        <input type="file" id="imageInput" accept="image/*" hidden>
+      </label>
+
+      <button id="voiceBtn">🎤</button>
+
+      <input type="text" id="textInput" placeholder="Escribe un mensaje…">
+      <button id="sendBtn">➤</button>
+    </div>
+
+  </section>
+</div>
+
+<script src="dm.js"></script>
+</body>
+</html>

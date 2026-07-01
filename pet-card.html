@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMORA – Tarjeta de Mascota</title>
+
+  <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #050505;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Fondo con textura sutil */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(250,204,21,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(250,204,21,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: #111;
+      border-radius: 28px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 380px;
+      border: 1.5px solid #222;
+      animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CABECERA ── */
+    .card-top {
+      background: #0c0a00;
+      padding: 26px 24px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-top::after {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(250,204,21,0.04);
+      pointer-events: none;
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #facc15;
+    }
+
+    .brand-name {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #facc15;
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+
+    .pet-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 18px;
+    }
+
+    /* Foto */
+    .photo-wrap { position: relative; flex-shrink: 0; }
+
+    .photo {
+      width: 96px; height: 96px;
+      border-radius: 20px;
+      background: #1a1a1a;
+      border: 2px solid #facc15;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px;
+    }
+
+    .species-badge {
+      position: absolute;
+      bottom: -7px; right: -7px;
+      background: #facc15;
+      border-radius: 9px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #0a0a0a;
+      letter-spacing: 0.5px;
+    }
+
+    /* Nombre y chips */
+    .pet-info { flex: 1; min-width: 0; }
+
+    .pet-name {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #fff;
+      font-size: 36px;
+      letter-spacing: 1px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: rgba(250,204,21,0.1);
+      border: 1px solid rgba(250,204,21,0.22);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #facc15;
+      font-weight: 500;
+    }
+
+    /* ── GRID DE DATOS ── */
+    .divider { height: 1px; background: #1c1c1c; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .cell {
+      padding: 14px 22px;
+      border-bottom: 1px solid #161616;
+    }
+
+    .cell:nth-child(odd)  { border-right: 1px solid #161616; }
+    .cell:last-child,
+    .cell:nth-last-child(2) { border-bottom: none; }
+
+    .cell-label {
+      font-size: 10px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .cell-value {
+      font-size: 14px;
+      color: #e0e0e0;
+      font-weight: 500;
+    }
+
+    /* ── SECCIÓN DUEÑO ── */
+    .owner-section {
+      padding: 18px 22px;
+      background: rgba(250,204,21,0.04);
+      border-top: 1px solid rgba(250,204,21,0.1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .owner-avatar {
+      width: 46px; height: 46px;
+      border-radius: 13px;
+      background: rgba(250,204,21,0.1);
+      border: 1.5px solid rgba(250,204,21,0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .owner-info { flex: 1; min-width: 0; }
+
+    .owner-label {
+      font-size: 10px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    .owner-name {
+      font-size: 15px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .owner-phone {
+      font-size: 12px;
+      color: #facc15;
+      margin-top: 2px;
+    }
+
+    .call-btn {
+      background: #facc15;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+      transition: background 0.15s;
+    }
+
+    .call-btn:hover { background: #e6b800; }
+
+    /* ── FOOTER ── */
+    .footer-bar {
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #161616;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #2a2a2a;
+      font-size: 13px;
+      letter-spacing: 3px;
+    }
+
+    .footer-note { font-size: 10px; color: #2a2a2a; }
+
+    /* ── ERROR ── */
+    .error-state {
+      z-index: 1;
+      text-align: center;
+      color: #555;
+      padding: 40px 20px;
+    }
+
+    .error-state h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #facc15;
+      font-size: 32px;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .error-state p { font-size: 14px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script>
+    // ─────────────────────────────────────────────
+    // Lee los parámetros de la URL
+    // Ejemplo de URL generada por React Native:
+    // https://tudominio.com/pet-card.html?name=Luna&breed=Labrador&age=2%20a%C3%B1os&gender=Hembra&color=Dorado&weight=18kg&vaccines=Al%20d%C3%ADa&chip=123456&photo=https%3A%2F%2F...&owner=Carlos&phone=%2B57300000000&species=PERRO
+    // ─────────────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+
+    const pet = {
+      name:     params.get('name')     || 'Sin nombre',
+      species:  params.get('species')  || 'MASCOTA',
+      breed:    params.get('breed')    || '---',
+      age:      params.get('age')      || '---',
+      gender:   params.get('gender')   || '---',
+      color:    params.get('color')    || '---',
+      weight:   params.get('weight')   || '---',
+      vaccines: params.get('vaccines') || '---',
+      chip:     params.get('chip')     || 'Sin chip',
+      photo:    params.get('photo')    || '',
+      owner:    params.get('owner')    || '---',
+      phone:    params.get('phone')    || '',
+    };
+
+    const root = document.getElementById('root');
+
+    if (!params.has('name') && !params.has('owner')) {
+      root.innerHTML = `
+        <div class="error-state">
+          <h2>OMORA</h2>
+          <p>No se encontraron datos de la mascota.<br>Este código QR puede estar desactualizado.</p>
+        </div>`;
+    } else {
+      const photoHTML = pet.photo
+        ? `<img src="${encodeURI(pet.photo)}" alt="Foto de ${pet.name}" />`
+        : `<div class="photo-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+              <circle cx="9"  cy="5"  r="2"   fill="#facc15"/>
+              <circle cx="15" cy="5"  r="2"   fill="#facc15"/>
+              <circle cx="5.5" cy="10" r="1.8" fill="#facc15"/>
+              <circle cx="18.5" cy="10" r="1.8" fill="#facc15"/>
+              <ellipse cx="12" cy="16" rx="5" ry="4.5" fill="#facc15"/>
+            </svg>
+            <span style="color:#555;font-size:10px;">Sin foto</span>
+          </div>`;
+
+      const phoneClean = pet.phone.replace(/\s+/g, '');
+
+      root.innerHTML = `
+        <div class="card">
+
+          <div class="card-top">
+            <div class="brand-bar">
+              <div class="brand-dot"></div>
+              <span class="brand-name">OMORA</span>
+            </div>
+            <div class="pet-row">
+              <div class="photo-wrap">
+                <div class="photo">${photoHTML}</div>
+                <span class="species-badge">${pet.species.toUpperCase()}</span>
+              </div>
+              <div class="pet-info">
+                <div class="pet-name">${pet.name.toUpperCase()}</div>
+                <div class="chips">
+                  <span class="chip">${pet.breed}</span>
+                  <span class="chip">${pet.age}</span>
+                  <span class="chip">${pet.gender}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="info-grid">
+            <div class="cell">
+              <div class="cell-label">Color</div>
+              <div class="cell-value">${pet.color}</div>
+            </div>
+            <div class="cell">
+              <div class="cell-label">Peso</div>
+              <div class="cell-value">${pet.weight}</div>
+            </div>
+            <div class="cell">
+              <div class="cell-label">Vacunas</div>
+              <div class="cell-value">${pet.vaccines}</div>
+            </div>
+            <div class="cell">
+              <div class="cell-label">Chip ID</div>
+              <div class="cell-value">${pet.chip}</div>
+            </div>
+          </div>
+
+          <div class="owner-section">
+            <div class="owner-avatar">👤</div>
+            
+            <div class="owner-info">
+              <div class="owner-label">Dueño</div>
+              <div class="owner-name">${pet.owner}</div>
+              <div class="owner-phone">${pet.phone}</div>
+            </div>
+            ${phoneClean ? `<a class="call-btn" href="tel:${phoneClean}">Llamar</a>` : ''}
+          </div>
+
+          <div class="footer-bar">
+            <span class="footer-brand">OMORA</span>
+            <span class="footer-note">Escanea para contactar</span>
+          </div>
+
+        </div>`;
+    }
+  </script>
+</body>
+</html>

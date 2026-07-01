@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OMORA - Red Social de adopción</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header role="banner" aria-label="Barra de navegación superior">
+    <div class="logo" tabindex="0">OMORA</div>
+    <nav role="navigation" aria-label="Menú principal">
+      <button id="homeBtn" class="nav-button" aria-current="page" aria-label="Inicio">Inicio</button>
+      <button id="searchBtn" class="nav-button" aria-label="Buscar">Buscar</button>
+      <button id="notificationsBtn" class="nav-button" aria-label="Notificaciones">Notificaciones</button>
+      <button id="profileBtn" class="nav-button" aria-label="Perfil">Perfil</button>
+    </nav>
+  </header>
+
+  <main class="container" role="main" id="mainContent" tabindex="-1">
+    <!-- Stories -->
+    <section class="stories" aria-label="Historias" role="list" id="storiesList"></section>
+    <!-- Feed -->
+    <section class="feed" aria-label="Publicaciones" id="feed"></section>
+  </main>
+
+  <footer>
+    &copy; 2025 OMORA &mdash; Red Social de adopción
+  </footer>
+
+  <!-- Modales -->
+  <div class="story-modal" role="dialog" aria-modal="true" aria-label="Historia" tabindex="-1" id="storyModal">
+    <div class="modal-header">
+      <img src="" alt="Avatar del usuario" />
+      <div class="username">Username</div>
+      <button class="close-btn" aria-label="Cerrar historia">&times;</button>
+    </div>
+    <div class="progress-bar-container" aria-hidden="true"></div>
+    <div class="story-image-container">
+      <img src="" alt="Imagen de la historia" />
+      <button class="nav-arrow left" aria-label="Historia anterior">&#10094;</button>
+      <button class="nav-arrow right" aria-label="Historia siguiente">&#10095;</button>
+      <div class="nav-touch-left" aria-hidden="true"></div>
+      <div class="nav-touch-right" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div id="searchModal" role="dialog" aria-modal="true" aria-label="Buscar" tabindex="-1"></div>
+  <div id="notificationsModal" role="dialog" aria-modal="true" aria-label="Notificaciones" tabindex="-1"></div>
+  <div id="profileModal" role="dialog" aria-modal="true" aria-label="Perfil de usuario" tabindex="-1"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

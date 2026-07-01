@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMORA - Modal de Búsqueda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="buscar.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>OMORA</h1>
+            <p>Plataforma de conexión y contenido</p>
+        </div>
+        
+        <button class="open-modal-btn" id="openModalBtn">
+            <i class="fas fa-search"></i>
+            Abrir Búsqueda
+        </button>
+    </div>
+
+    <!-- Modal de Búsqueda -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="search-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Buscar en OMORA
+                </h2>
+                <button class="close-btn" id="closeSearchBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="search-input-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="search" class="search-input" id="searchInput" placeholder="Buscar usuarios, posts o temas..." aria-label="Buscar en OMORA">
+            </div>
+            
+            <div class="search-options">
+                <div class="search-option active" data-type="all">Todo</div>
+                <div class="search-option" data-type="users">Usuarios</div>
+                <div class="search-option" data-type="posts">Posts</div>
+                <div class="search-option" data-type="topics">Temas</div>
+            </div>
+            
+            <div class="recent-searches">
+                <h3 class="recent-title">
+                    <i class="far fa-clock"></i>
+                    Búsquedas recientes
+                </h3>
+                <div class="recent-tags">
+                    <div class="recent-tag">diseño web</div>
+                    <div class="recent-tag">marketing digital</div>
+                    <div class="recent-tag">Ana Rodríguez</div>
+                    <div class="recent-tag">tutoriales</div>
+                </div>
+            </div>
+            
+            <div class="search-results" id="searchResults">
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>Ingresa un término de búsqueda para comenzar</p>
+                </div>
+                
+                <!-- Los resultados se mostrarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalOverlay = document.getElementById('searchModal');
+            const openModalBtn = document.getElementById('openModalBtn');
+            const closeSearchBtn = document.getElementById('closeSearchBtn');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const searchOptions = document.querySelectorAll('.search-option');
+            
+            // Abrir modal
+            openModalBtn.addEventListener('click', () => {
+                modalOverlay.classList.add('active');
+                searchInput.focus();
+            });
+            
+            // Cerrar modal
+            closeSearchBtn.addEventListener('click', closeModal);
+            
+            // Cerrar al hacer clic fuera del modal
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+            
+            // Cerrar con tecla Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            // Cambiar tipo de búsqueda
+            searchOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    searchOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    performSearch();
+                });
+            });
+            
+            // Realizar búsqueda al escribir
+            searchInput.addEventListener('input', performSearch);
+            
+            // Función para cerrar el modal
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+            }
+            
+            // Función para realizar búsqueda
+            function performSearch() {
+                const query = searchInput.value.trim();
+                const searchType = document.querySelector('.search-option.active').dataset.type;
+                
+                if (query.length === 0) {
+                    searchResults.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <p>Ingresa un término de búsqueda para comenzar</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Simulación de resultados de búsqueda
+                setTimeout(() => {
+                    if (query.toLowerCase() === 'nada') {
+                        searchResults.innerHTML = `
+                            <div class="no-results">
+                                <i class="fas fa-frown"></i>
+                                <p>No se encontraron resultados para "${query}"</p>
+                                <p>Intenta con otros términos de búsqueda</p>
+                            </div>
+                        `;
+                    } else {
+                        let resultsHTML = '';
+                        
+                        if (searchType === 'all' || searchType === 'users') {
+                            resultsHTML += `
+                                <div class="result-section">
+                                    <h3 class="result-section-title">
+                                        <i class="fas fa-users"></i>
+                                        Usuarios
+                                    </h3>
+                                    <div class="result-item fade-in">
+                                        <img src="https://placeholder-image-service.onrender.com/image/100x100?prompt=professional%20profile%20picture%20of%20a%20businessperson&id=user1&customer_id=cus_SzeSjFx9W1vqDL" alt="Foto de perfil de Carlos Méndez" class="avatar">
+                                        <div class="result-content">
+                                            <h4 class="result-title">Carlos Méndez</h4>
+                                            <p class="result-desc">Diseñador UX/UI en TechSolutions</p>
+                                            <div class="result-meta">
+                                                <span><i class="fas fa-map-marker-alt"></i> Madrid, España</span>
+                                                <span><i class="fas fa-user-friends"></i> 345 seguidores</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="result-item fade-in">
+                                        <img src="https://placeholder-image-service.onrender.com/image/100x100?prompt=professional%20profile%20picture%20of%20a%20woman&id=user2&customer_id=cus_SzeSjFx9W1vqDL" alt="Foto de perfil de Ana Rodríguez" class="avatar">
+                                        <div class="result-content">
+                                            <h4 class="result-title">Ana Rodríguez</h4>
+                                            <p class="result-desc">Desarrolladora Frontend en Innovatech</p>
+                                            <div class="result-meta">
+                                                <span><i class="fas fa-map-marker-alt"></i> Barcelona, España</span>
+                                                <span><i class="fas fa-user-friends"></i> 512 seguidores</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        if (searchType === 'all' || searchType === 'posts') {
+                            resultsHTML += `
+                                <div class="result-section">
+                                    <h3 class="result-section-title">
+                                        <i class="fas fa-file-alt"></i>
+                                        Posts
+                                    </h3>
+                                    <div class="result-item fade-in">
+                                        <div class="result-content">
+                                            <h4 class="result-title">Nuevas tendencias en diseño web 2023</h4>
+                                            <p class="result-desc">Exploramos las últimas tendencias en diseño web que están marcando pauta este año...</p>
+                                            <div class="result-meta">
+                                                <span><i class="fas fa-heart"></i> 124 likes</span>
+                                                <span><i class="fas fa-comment"></i> 23 comentarios</span>
+                                                <span><i class="fas fa-calendar"></i> Hace 2 días</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="result-item fade-in">
+                                        <div class="result-content">
+                                            <h4 class="result-title">Cómo optimizar el rendimiento de tu aplicación React</h4>
+                                            <p class="result-desc">Guía práctica con ejemplos para mejorar el rendimiento de tus aplicaciones React...</p>
+                                            <div class="result-meta">
+                                                <span><i class="fas fa-heart"></i> 89 likes</span>
+                                                <span><i class="fas fa-comment"></i> 17 comentarios</span>
+                                                <span><i class="fas fa-calendar"></i> Hace 1 semana</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        if (searchType === 'all' || searchType === 'topics') {
+                            resultsHTML += `
+                                <div class="result-section">
+                                    <h3 class="result-section-title">
+                                        <i class="fas fa-hashtag"></i>
+                                        Temas
+                                    </h3>
+                                    <div class="result-item fade-in">
+                                        <div class="result-content">
+                                            <h4 class="result-title">#DiseñoWeb</h4>
+                                            <p class="result-desc">4,523 publicaciones</p>
+                                        </div>
+                                    </div>
+                                    <div class="result-item fade-in">
+                                        <div class="result-content">
+                                            <h4 class="result-title">#DesarrolloFrontend</h4>
+                                            <p class="result-desc">3,187 publicaciones</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        searchResults.innerHTML = resultsHTML;
+                    }
+                }, 600); // Simular delay de búsqueda
+            }
+            
+            // Permitir busqueda con Enter
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 320px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 15px;
+}
+
+.header h2 {
+  margin-bottom: 15px;
+}
+
+.search {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: var(--input);
+  color: var(--text);
+  margin-bottom: 15px;
+}
+
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chat:hover {
+  background: var(--input);
+}
+
+.chat img {
+  border-radius: 50%;
+}
+
+.chat p {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* CHAT WINDOW */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none;
+}
+
+.chat-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-header img {
+  border-radius: 50%;
+}
+
+.back {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* MENSAJES */
+.messages {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+}
+
+.sent {
+  background: var(--message-sent);
+  color: #fff;
+  align-self: flex-end;
+}
+
+.received {
+  background: var(--message-received);
+  align-self: flex-start;
+}
+
+.message img {
+  max-width: 220px;
+  border-radius: 12px;
+}
+
+audio {
+  width: 220px;
+}
+
+/* INPUT */
+.input-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.input-area input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background: var(--input);
+  color: var(--text);
+}
+
+.input-area button {
+  background: var(--message-sent);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.icon-btn {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+  }
+
+  .chat-window {
+    width: 100%;
+  }
+
+  .back {
+    display: block;
+  }
+}

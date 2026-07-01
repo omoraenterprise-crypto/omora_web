@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omora</title>
+
+<!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --violet: #6A5ACD;
+  --violet-light: #8B7FD9;
+  --violet-dim: rgba(106,90,205,0.12);
+  --orange: #FF9F43;
+  --orange-dim: rgba(255,159,67,0.15);
+  --red: #E24B4A;
+  --green: #2ECC71;
+  --bg: #F4F3FB;
+  --surface: #FFFFFF;
+  --border: #E8E6F5;
+  --text: #18171F;
+  --muted: #7B7995;
+  --radius-card: 24px;
+  --radius-btn: 16px;
+  --shadow: 0 4px 20px rgba(106,90,205,0.10);
+  --shadow-lg: 0 12px 40px rgba(106,90,205,0.16);
+  --nav-h: 72px;
+  --sidebar-w: 240px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+
+/* ── LAYOUT ── */
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 40; padding: 28px 16px 20px; gap: 6px; transition: transform .3s ease; }
+.sidebar-logo { font-size: 26px; font-weight: 900; letter-spacing: 3px; color: var(--violet); padding: 0 12px 24px; display: flex; align-items: center; gap: 10px; }
+.sidebar-logo i { font-size: 22px; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; font-weight: 600; font-size: 14px; color: var(--muted); cursor: pointer; transition: .18s; }
+.nav-item:hover { background: var(--violet-dim); color: var(--violet); }
+.nav-item.active { background: var(--violet-dim); color: var(--violet); }
+.nav-item i { width: 20px; text-align: center; font-size: 17px; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 0; }
+.sidebar-user { margin-top: auto; padding: 14px; display: flex; align-items: center; gap: 10px; border-radius: 16px; background: var(--violet-dim); cursor: pointer; }
+.sidebar-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--violet); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; overflow: hidden; }
+.sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.sidebar-user-name { font-weight: 700; font-size: 13px; }
+.sidebar-user-role { font-size: 11px; color: var(--muted); }
+
+.main-content { flex: 1; margin-left: var(--sidebar-w); padding-bottom: 20px; min-height: 100vh; }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 30; }
+.topbar-title { font-size: 20px; font-weight: 900; flex: 1; }
+.search-bar { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 10px 16px; min-width: 240px; max-width: 340px; }
+.search-bar input { border: none; outline: none; background: transparent; font-size: 14px; color: var(--text); flex: 1; }
+.search-bar i { color: var(--muted); font-size: 14px; }
+.topbar-icon-btn { width: 42px; height: 42px; border-radius: 12px; background: var(--bg); color: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; cursor: pointer; border: 1.5px solid var(--border); transition: .15s; }
+.topbar-icon-btn:hover { color: var(--violet); border-color: var(--violet); }
+.cart-badge { position: absolute; top: -5px; right: -5px; background: var(--red); color: white; border-radius: 20px; min-width: 20px; height: 20px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
+
+.page { padding: 28px 32px; display: none; }
+.page.active { display: block; }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  .main-content { margin-left: 0; padding-bottom: calc(var(--nav-h) + 10px); }
+  .topbar { padding: 14px 18px; }
+  .topbar-title { font-size: 18px; }
+  .search-bar { display: none; }
+  .page { padding: 16px 16px 20px; }
+  .topbar-mobile-menu { display: flex !important; }
+  .bottom-nav { display: flex !important; }
+}
+.topbar-mobile-menu { display: none; width: 40px; height: 40px; border-radius: 12px; background: var(--violet-dim); color: var(--violet); align-items: center; justify-content: center; font-size: 18px; }
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: var(--surface); border-top: 1px solid var(--border); z-index: 40; }
+.bottom-nav-inner { max-width: 600px; margin: 0 auto; display: flex; height: 100%; }
+.bottom-nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 600; background: none; border: none; cursor: pointer; transition: .15s; }
+.bottom-nav-btn i { font-size: 20px; }
+.bottom-nav-btn.active { color: var(--violet); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 39; }
+.sidebar-overlay.show { display: block; }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+@media (max-width: 1100px) { .grid-4 { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 860px) { .grid-4 { grid-template-columns: repeat(2,1fr); } .grid-3 { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 540px) { .grid-4,.grid-3,.grid-2 { grid-template-columns: repeat(2,1fr); gap: 12px; } }
+
+/* ── COMPONENTS ── */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.section-head h2 { font-size: 19px; font-weight: 800; }
+.see-all { font-size: 13px; font-weight: 700; color: var(--violet); cursor: pointer; }
+
+.prod-card { background: var(--surface); border-radius: var(--radius-card); border: 1.5px solid var(--border); overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s; position: relative; }
+.prod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.prod-img-wrap { position: relative; }
+.prod-img { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: center; background: var(--bg); }
+.prod-badges { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+.badge { padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; color: white; }
+.badge-oferta { background: var(--violet); }
+.badge-alianza { background: var(--orange); }
+.badge-desc { background: var(--red); }
+.prod-body { padding: 12px; }
+.prod-brand { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.prod-name { font-size: 13px; font-weight: 700; line-height: 1.35; margin: 3px 0 6px; min-height: 35px; overflow: hidden; }
+.prod-store-tag { font-size: 11px; font-weight: 700; color: var(--violet); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; cursor: pointer; }
+.prod-store-tag:hover { text-decoration: underline; }
+.prod-footer { display: flex; align-items: center; justify-content: space-between; }
+.prod-price-block { display: flex; flex-direction: column; }
+.prod-strike { font-size: 11px; color: var(--muted); text-decoration: line-through; }
+.prod-price { font-size: 16px; font-weight: 900; }
+.prod-price.discounted { color: var(--red); }
+.btn-add { width: 36px; height: 36px; border-radius: 11px; background: var(--violet); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 4px 12px rgba(106,90,205,0.35); transition: .15s; }
+.btn-add:hover { background: var(--violet-light); transform: scale(1.08); }
+
+.hero-banner { border-radius: 28px; overflow: hidden; position: relative; aspect-ratio: 3/1; min-height: 160px; margin-bottom: 28px; }
+@media (max-width: 540px) { .hero-banner { aspect-ratio: 16/9; } }
+.hero-banner img { width: 100%; height: 100%; object-fit: cover; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg,rgba(18,17,31,.75) 0%,transparent 70%); display: flex; flex-direction: column; justify-content: center; padding: 32px; }
+.hero-eyebrow { font-size: 12px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.hero-title { font-size: clamp(20px,4vw,36px); font-weight: 900; color: white; line-height: 1.1; max-width: 400px; }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,.75); margin-top: 8px; }
+.hero-btn { margin-top: 16px; padding: 10px 22px; border-radius: 14px; background: var(--violet); color: white; font-weight: 700; font-size: 14px; width: fit-content; box-shadow: 0 4px 16px rgba(106,90,205,0.45); transition: .15s; cursor: pointer; display: inline-block; }
+.hero-btn:hover { background: var(--violet-light); }
+
+.cat-pills { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; scrollbar-width: none; }
+.cat-pills::-webkit-scrollbar { display: none; }
+.cat-pill { display: flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: .15s; }
+.cat-pill:hover { border-color: var(--violet); color: var(--violet); }
+.cat-pill.active { background: var(--violet); color: white; border-color: var(--violet); }
+.cat-pill i { font-size: 14px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+@media (max-width: 860px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
+.stat-card { background: var(--surface); border-radius: var(--radius-card); border: 1.5px solid var(--border); padding: 20px; }
+.stat-icon { width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
+.stat-value { font-size: 24px; font-weight: 900; }
+.stat-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.stat-change { font-size: 11px; font-weight: 700; margin-top: 6px; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+
+.store-card { background: var(--surface); border-radius: var(--radius-card); border: 1.5px solid var(--border); overflow: hidden; cursor: pointer; transition: .2s; }
+.store-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.store-card-banner { width: 100%; height: 110px; object-fit: cover; background: var(--violet-dim); }
+.store-card-body { padding: 14px; }
+.store-card-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.store-card-logo { width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--violet); overflow: hidden; background: var(--violet-dim); display: flex; align-items: center; justify-content: center; color: var(--violet); font-size: 18px; flex-shrink: 0; }
+.store-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+.store-card-name { font-size: 15px; font-weight: 800; }
+.alianza-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 10px; background: var(--orange-dim); color: var(--orange); font-size: 10px; font-weight: 700; }
+.store-card-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
+.store-meta { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+.store-meta-i { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; padding: 12px 14px; border-bottom: 1.5px solid var(--border); }
+.data-table td { padding: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg); }
+.status-pill { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.s-delivered { background: rgba(46,204,113,.15); color: var(--green); }
+.s-pending { background: var(--orange-dim); color: var(--orange); }
+.s-cancelled { background: rgba(226,75,74,.12); color: var(--red); }
+
+.card-surface { background: var(--surface); border-radius: var(--radius-card); border: 1.5px solid var(--border); padding: 22px; margin-bottom: 16px; }
+.option-row { display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 14px; }
+.option-row:last-child { border-bottom: none; }
+.option-row i:first-child { width: 20px; color: var(--violet); }
+.option-row .chevron { color: var(--border); margin-left: auto; }
+
+.profile-cover { width: 100%; height: 160px; object-fit: cover; background: var(--violet); }
+.profile-info-strip { display: flex; align-items: flex-end; gap: 16px; padding: 0 24px 20px; margin-top: -40px; position: relative; background: var(--surface); }
+.profile-avatar-wrap { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--surface); overflow: hidden; flex-shrink: 0; background: var(--violet); display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: 700; }
+.profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name { font-size: 20px; font-weight: 900; }
+.profile-email { font-size: 13px; color: var(--muted); }
+
+/* Modals */
+.modal-bg { position: fixed; inset: 0; background: rgba(10,8,30,.6); backdrop-filter: blur(3px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
+.modal-bg.show { display: flex; }
+.modal-sheet { background: var(--bg); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 32px 32px 0 0; }
+.drag-bar { padding: 14px; text-align: center; cursor: pointer; position: sticky; top: 0; background: var(--bg); z-index: 5; }
+.drag-inner { width: 44px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto; }
+
+.det-img { width: 100%; aspect-ratio: 4/3; object-fit: contain; background: white; }
+.det-body { padding: 24px; }
+.det-brand { color: var(--violet); font-weight: 700; font-size: 14px; }
+.det-title { font-size: 22px; font-weight: 900; margin: 4px 0 16px; }
+.det-price-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.det-price { font-size: 30px; font-weight: 900; }
+.det-price.red { color: var(--red); }
+.det-strike { font-size: 14px; color: var(--muted); text-decoration: line-through; }
+.member-chip { padding: 10px 14px; border-radius: 14px; background: var(--violet-dim); text-align: center; }
+.member-chip .lbl { font-size: 11px; color: var(--muted); }
+.member-chip .val { font-size: 18px; font-weight: 900; color: var(--violet); }
+.tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 14px; }
+.tab-btn { padding: 8px 0; margin-right: 24px; border-bottom: 3px solid transparent; font-weight: 700; font-size: 14px; color: var(--muted); background: none; cursor: pointer; transition: .15s; }
+.tab-btn.active { color: var(--violet); border-bottom-color: var(--violet); }
+.det-text { font-size: 14px; line-height: 1.65; color: var(--text); white-space: pre-line; }
+.det-actions { display: flex; gap: 10px; margin-top: 24px; }
+.btn-fav { width: 48px; height: 48px; border-radius: 14px; border: 1.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--muted); flex-shrink: 0; transition: .15s; }
+.btn-fav.active { border-color: var(--red); background: #fff0f0; color: var(--red); }
+.btn-primary { flex: 1; padding: 14px; border-radius: 16px; background: var(--violet); color: white; font-weight: 700; font-size: 15px; text-align: center; box-shadow: 0 4px 16px rgba(106,90,205,.35); transition: .15s; cursor: pointer; }
+.btn-primary:hover { background: var(--violet-light); }
+
+.cart-body { padding: 24px; }
+.cart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.cart-head h2 { font-size: 24px; font-weight: 900; }
+.cart-head button { font-size: 28px; color: var(--muted); }
+.cart-item { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.cart-item-img { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; background: var(--bg); }
+.cart-item-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.cart-item-price { color: var(--violet); font-weight: 700; font-size: 13px; }
+.qty-ctrl { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.qty-ctrl button { font-size: 24px; color: var(--violet); }
+.qty-ctrl span { font-size: 16px; font-weight: 700; min-width: 20px; text-align: center; }
+.cart-foot { padding-top: 20px; margin-top: 10px; border-top: 1.5px solid var(--border); }
+.cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.cart-total-label { font-size: 16px; font-weight: 600; }
+.cart-total-val { font-size: 28px; font-weight: 900; }
+
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; padding: 12px 24px; border-radius: 14px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: .3s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 769px) { .toast { bottom: 30px; } }
+
+/* Vendedor / Admin */
+.chart-placeholder { background: var(--surface); border-radius: var(--radius-card); border: 1.5px solid var(--border); padding: 20px; margin-bottom: 16px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; margin-top: 12px; }
+.chart-bar { flex: 1; border-radius: 8px 8px 0 0; background: var(--violet-dim); transition: .3s; }
+.chart-bar.hi { background: var(--violet); }
+.chart-xlabels { display: flex; gap: 8px; margin-top: 6px; }
+.chart-xlabels span { flex: 1; text-align: center; font-size: 10px; color: var(--muted); font-weight: 600; }
+.alert-card { display: flex; gap: 14px; padding: 16px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--border); margin-bottom: 12px; }
+.alert-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.alert-title { font-weight: 700; font-size: 14px; }
+.alert-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.alert-time { font-size: 11px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+.tag-violet { background: var(--violet-dim); color: var(--violet); }
+.tag-orange { background: var(--orange-dim); color: var(--orange); }
+.tag-red { background: rgba(226,75,74,.1); color: var(--red); }
+.tag-green { background: rgba(46,204,113,.12); color: var(--green); }
+
+/* Mi tienda — formularios */
+.form-label { font-size: 13px; font-weight: 700; margin-bottom: 6px; margin-top: 14px; display: block; }
+.form-input { border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 14px; font-size: 14px; width: 100%; outline: none; background: var(--bg); color: var(--text); transition: border-color .15s; }
+.form-input:focus { border-color: var(--violet); }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-input-row { display: flex; gap: 10px; }
+.cat-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.cat-chip { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 700; cursor: pointer; transition: .15s; background: var(--surface); color: var(--muted); }
+.cat-chip.active { background: var(--violet); color: white; border-color: var(--violet); }
+.discount-preview { background: rgba(226,75,74,.08); border: 1.5px solid rgba(226,75,74,.25); border-radius: 16px; padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; gap: 12px; }
+.discount-pct-circle { width: 50px; height: 50px; border-radius: 25px; background: var(--red); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: white; flex-shrink: 0; }
+.my-prod-card { display: flex; align-items: center; gap: 14px; padding: 14px; background: var(--surface); border-radius: 20px; border: 1.5px solid var(--border); margin-bottom: 12px; }
+.my-prod-img { width: 70px; height: 70px; border-radius: 16px; object-fit: cover; background: var(--bg); flex-shrink: 0; }
+.my-prod-actions { display: flex; flex-direction: column; gap: 6px; margin-left: auto; flex-shrink: 0; }
+.icon-btn { width: 36px; height: 36px; border-radius: 12px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: .15s; background: var(--surface); }
+.icon-btn:hover { border-color: var(--violet); color: var(--violet); }
+.icon-btn.danger:hover { border-color: var(--red); color: var(--red); }
+.store-hero-admin { background: var(--violet); border-radius: 24px; padding: 20px; margin-bottom: 16px; color: white; }
+.store-tabs { display: flex; gap: 0; background: rgba(255,255,255,0.15); border-radius: 14px; padding: 4px; margin-top: 16px; }
+.store-tab { flex: 1; padding: 8px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 13px; cursor: pointer; color: rgba(255,255,255,.65); transition: .15s; }
+.store-tab.active { background: white; color: var(--violet); }
+.spinner { border: 3px solid var(--border); border-top: 3px solid var(--violet); border-radius: 50%; width: 32px; height: 32px; animation: spin .8s linear infinite; margin: 30px auto; display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-state i { font-size: 48px; color: var(--border); margin-bottom: 12px; display: block; }
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><i class="fa-solid fa-paw"></i> OMORA</div>
+  <div id="sidebarNav"></div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-user" id="sidebarUser">
+    <div class="sidebar-avatar" id="sidebarAvatar">O</div>
+    <div>
+      <div class="sidebar-user-name" id="sidebarUserName">Cargando...</div>
+      <div class="sidebar-user-role" id="sidebarUserRole">—</div>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content" id="mainContent">
+  <div class="topbar" id="topbar">
+    <button class="topbar-mobile-menu" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-title" id="topbarTitle">Inicio</div>
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="globalSearch" placeholder="Buscar productos...">
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+      <div class="topbar-icon-btn" id="cartBtn" title="Carrito" style="display:none;">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page active" id="page-inicio"></div>
+  <div class="page" id="page-tiendas"></div>
+  <div class="page" id="page-ofertas"></div>
+  <div class="page" id="page-perfil"></div>
+  <div class="page" id="page-mi-tienda"></div>
+  <div class="page" id="page-pedidos"></div>
+  <!-- External pages -->
+  <div style="display:none" id="external-pages"></div>
+  <div class="page" id="page-admin-home"></div>
+  <div class="page" id="page-tiendas-admin"></div>
+  <div class="page" id="page-usuarios"></div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-inner" id="bottomNavInner"></div>
+</nav>
+
+<!-- MODAL DETALLE -->
+<div class="modal-bg" id="detailModal">
+  <div class="modal-sheet">
+    <div class="drag-bar" id="detailClose"><div class="drag-inner"></div></div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- MODAL CARRITO -->
+<div class="modal-bg" id="cartModal">
+  <div class="modal-sheet">
+    <div class="cart-body">
+      <div class="cart-head">
+        <h2>Mi Carrito 🛒</h2>
+        <button id="cartClose"><i class="fa-solid fa-circle-xmark"></i></button>
+      </div>
+      <div id="cartItemsEl"></div>
+      <div id="cartFootEl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TIENDA PÚBLICA -->
+<div class="modal-bg" id="storeModal">
+  <div class="modal-sheet" style="max-height:95vh;">
+    <div class="drag-bar" id="storeModalClose"><div class="drag-inner"></div></div>
+    <div id="storeModalContent"></div>
+  </div>
+</div>
+
+<!-- MODAL FORMULARIO PRODUCTO (Alianza) -->
+<div class="modal-bg" id="prodFormModal">
+  <div class="modal-sheet">
+    <div class="drag-bar" id="prodFormClose"><div class="drag-inner"></div></div>
+    <div id="prodFormContent" style="padding:0 24px 32px;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, collection,
+  addDoc, onSnapshot, query, where, orderBy,
+  serverTimestamp, deleteDoc, updateDoc, getDocs
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import {
+  getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+// ── Firebase config ──
+const firebaseConfig = {
+  apiKey: "AIzaSyBtGVfaEKbVXWCvTvA3t_XRZ6PK28pL5rc",
+  authDomain: "omora-55e66.firebaseapp.com",
+  projectId: "omora-55e66",
+  storageBucket: "omora-55e66.firebasestorage.app",
+  messagingSenderId: "860384804554",
+  appId: "1:860384804554:web:d59b9e0732619814d1be33"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ── Constants ──
+const ADMIN_EMAIL = 'omora.enterprise@gmail.com';
+const normalizeRol = r => String(r||'').trim().toLowerCase();
+const isRolAlianza = r => normalizeRol(r) === 'alianza';
+const isAdminEmail = e => String(e||'').trim().toLowerCase() === ADMIN_EMAIL;
+const fmt = n => '$' + Number(n).toLocaleString('es-CO');
+const disc = (p,m) => p && m && m < p ? Math.round((p-m)/p*100) : null;
+const statusClass = s => s==='Entregado'?'s-delivered':s==='Pendiente'?'s-pending':'s-cancelled';
+
+// ── State ──
+let currentUser = null;
+let userData = { name:'', email:'', profilePic:'', points:0, rol:'', uid:'' };
+let role = 'cliente'; // 'cliente' | 'alianza' | 'admin'
+let currentPage = 'inicio';
+let selectedCat = 'Todos';
+let cart = [];
+let favIds = new Set();
+let detailProduct = null;
+let activeTab = 'beneficios';
+let alianzaProducts = [];
+let allStores = [];
+let myProducts = [];
+let myStoreData = null;
+let storeTab = 'productos'; // 'productos' | 'configurar'
+let editingProd = null;
+let unsubAlianza = null;
+let unsubFavs = null;
+let unsubMyProds = null;
+let unsubMyStore = null;
+let unsubStores = null;
+let viewingStoreId = null;
+
+// Static products (matching React Native)
+const STATIC_PRODUCTS = [
+  { id:'s1', source:'static', category:'Perros', name:'Hills Pd Metabolic - Alimento Perro Mantenimiento Peso', brand:'Hills', price:235700, memberPrice:214487, image:'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800', description:'Nutrición clínicamente probada para ayudar a los perros a perder peso.', benefits:'• Controla el hambre.\n• Vitalidad y salud gastrointestinal.\n• Clínicamente probado.', offer:true },
+  { id:'s2', source:'static', category:'Gatos', name:'Churu Snack Salmón Cremoso', brand:'Churu', price:13200, memberPrice:11000, image:'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600', description:'Snack cremoso irresistible para gatos, rico en proteínas.', benefits:'• Hidratación adicional.\n• Sin colorantes artificiales.', offer:true },
+  { id:'s3', source:'static', category:'Perros', name:'Cama Ortopédica Memory Foam XL', brand:'Dreamy', price:180000, memberPrice:155000, image:'https://images.unsplash.com/photo-1591584252241-476fd960fca8?w=400', description:'Cama con espuma viscoelástica que alivia la presión en articulaciones.', benefits:'• Ideal para perros mayores.\n• Funda lavable.\n• Antideslizante.', offer:false },
+  { id:'s4', source:'static', category:'Snacks', name:'Huesos Dentales Menta Fresca', brand:'Bark', price:25000, memberPrice:22000, image:'https://images.unsplash.com/photo-1583336663277-620dc1996580?w=400', description:'Huesos masticables que limpian los dientes y refrescan el aliento.', benefits:'• Reduce el sarro.\n• Aliento fresco.', offer:true },
+  { id:'s5', source:'static', category:'Gatos', name:'Arena Sanitaria Premium 10kg', brand:'Kitty', price:45000, memberPrice:39000, image:'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400', description:'Arena aglutinante de alta absorción con control de olores.', benefits:'• Control de olores 7 días.\n• Baja generación de polvo.', offer:false },
+];
+
+const IMAGES = {
+  hero1:'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=1200&q=80',
+  hero2:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1200&q=80',
+  cover:'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=80',
+};
+
+const ROLES_CONFIG = {
+  cliente: {
+    label:'Cliente',
+    nav:[
+      { id:'inicio', icon:'fa-house', label:'Inicio' },
+      { id:'tiendas', icon:'fa-store', label:'Tiendas' },
+      { id:'ofertas', icon:'fa-tag', label:'Ofertas' },
+      { id:'perfil', icon:'fa-user', label:'Perfil' },
+    ]
+  },
+  alianza: {
+    label:'Vendedor Alianza',
+    nav:[
+      { id:'mi-tienda', icon:'fa-store', label:'Mi Tienda' },
+      { id:'inicio', icon:'fa-house', label:'Catálogo' },
+      { id:'pedidos', icon:'fa-bag-shopping', label:'Pedidos' },
+      { id:'perfil', icon:'fa-user', label:'Perfil' },
+    ]
+  },
+  admin: {
+    label:'Administrador',
+    nav:[
+      { id:'admin-home', icon:'fa-gauge-high', label:'Panel' },
+      { id:'tiendas-admin', icon:'fa-store', label:'Tiendas' },
+      { id:'usuarios', icon:'fa-users', label:'Usuarios' },
+      { id:'perfil', icon:'fa-user', label:'Perfil' },
+    ]
+  }
+};
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if (!user) { window.location.href = '../Login/login.html'; return; }
+
+  // Load user profile (same logic as React Native)
+  try {
+    const userRef = doc(db, 'usuarios', user.uid);
+    const perfilRef = doc(db, 'perfiles', user.uid);
+    const [uSnap, pSnap] = await Promise.all([getDoc(userRef), getDoc(perfilRef)]);
+    const uData = uSnap.exists() ? uSnap.data() : {};
+    const pData = pSnap.exists() ? pSnap.data() : {};
+
+    const fotoPerfil = uData.fotoPerfil || uData.photoURL || uData.photo || uData.imagen || uData.avatar || uData.profilePic || uData.fotoUrl || uData.foto || user.photoURL || '';
+    const rolUsuario = uData.rol || uData.role || uData.Rol || '';
+    const rolPerfil = pData.rol || pData.role || pData.Rol || pData.rolUsuario || '';
+    const rolFinal = rolUsuario || rolPerfil || '';
+    const nombreUsuario = uData.nombre || uData.username || uData.name || user.displayName || 'Usuario';
+
+    userData = {
+      name: nombreUsuario,
+      email: uData.email || user.email || '',
+      profilePic: fotoPerfil,
+      points: uData.omoraPoints || uData.points || uData.puntos || 0,
+      rol: rolFinal,
+      uid: user.uid,
+      purchaseHistory: uData.historialCompras || [],
+    };
+  } catch (e) {
+    userData = { name: user.displayName || 'Usuario', email: user.email || '', profilePic: user.photoURL || '', points: 0, rol: '', uid: user.uid, purchaseHistory: [] };
+  }
+
+  // Determine role
+  if (isAdminEmail(user.email)) role = 'admin';
+  else if (isRolAlianza(userData.rol)) role = 'alianza';
+  else role = 'cliente';
+
+  // Subscribe to live data
+  subscribeData();
+
+  const firstPage = ROLES_CONFIG[role].nav[0].id;
+  goTo(firstPage);
+});
+
+// ══════════════════════════════════════════
+// FIRESTORE SUBSCRIPTIONS (like useEffect in React Native)
+// ══════════════════════════════════════════
+function subscribeData() {
+  // Alliance products (activo == true) — all users see this
+  if (unsubAlianza) unsubAlianza();
+  const qAlianza = query(collection(db, 'productos_alianza'), where('activo', '==', true));
+  unsubAlianza = onSnapshot(qAlianza, snap => {
+    alianzaProducts = snap.docs.map(d => ({
+      id: d.id, source:'alianza', offer:false,
+      category: d.data().categoria || 'Otros',
+      name: d.data().nombre || 'Sin nombre',
+      brand: d.data().vendedorNombre || 'Alianza',
+      price: d.data().precio || 0,
+      memberPrice: d.data().memberPrice || d.data().precio || 0,
+      image: d.data().imagenUrl || '',
+      description: d.data().descripcion || '',
+      benefits: d.data().beneficios || '',
+      vendedorId: d.data().vendedorId || '',
+      vendedorNombre: d.data().vendedorNombre || '',
+      ...d.data(),
+    }));
+    if (['inicio','tiendas','ofertas'].includes(currentPage)) rerenderCurrentPage();
+  }, () => {});
+
+  // All stores
+  if (unsubStores) unsubStores();
+  unsubStores = onSnapshot(collection(db, 'tiendas'), snap => {
+    allStores = snap.docs.map(d => ({ id:d.id, vendedorId:d.id, ...d.data() }));
+    if (currentPage === 'tiendas') rerenderCurrentPage();
+  }, () => {});
+
+  // Favorites (cliente / alianza)
+  if (userData.uid) {
+    if (unsubFavs) unsubFavs();
+    const favCol = collection(db, 'usuarios', userData.uid, 'favoritos');
+    unsubFavs = onSnapshot(favCol, snap => {
+      favIds = new Set(snap.docs.map(d => d.id));
+      // Re-render detail if open
+      if (document.getElementById('detailModal').classList.contains('show') && detailProduct) {
+        renderDetail();
+      }
+    }, () => {});
+  }
+
+  // Alianza: my products + my store
+  if (role === 'alianza' && userData.uid) {
+    if (unsubMyProds) unsubMyProds();
+    const qMyProds = query(collection(db, 'productos_alianza'), where('vendedorId', '==', userData.uid));
+    unsubMyProds = onSnapshot(qMyProds, snap => {
+      myProducts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      if (currentPage === 'mi-tienda') rerenderCurrentPage();
+    }, () => {});
+
+    if (unsubMyStore) unsubMyStore();
+    const storeRef = doc(db, 'tiendas', userData.uid);
+    unsubMyStore = onSnapshot(storeRef, snap => {
+      myStoreData = snap.exists() ? snap.data() : null;
+      if (currentPage === 'mi-tienda') rerenderCurrentPage();
+    }, () => {});
+  }
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function buildNav() {
+  const items = ROLES_CONFIG[role].nav;
+  document.getElementById('sidebarNav').innerHTML = items.map(n => `
+    <div class="nav-item ${currentPage===n.id?'active':''}" data-page="${n.id}">
+      <i class="fa-solid ${n.icon}"></i> ${n.label}
+    </div>`).join('');
+  document.getElementById('bottomNavInner').innerHTML = items.map(n => `
+    <button class="bottom-nav-btn ${currentPage===n.id?'active':''}" data-page="${n.id}">
+      <i class="fa-solid ${n.icon}"></i><span>${n.label}</span>
+    </button>`).join('');
+  document.getElementById('sidebarUserRole').textContent = ROLES_CONFIG[role].label;
+  document.getElementById('sidebarUserName').textContent = userData.name || 'Usuario';
+  const av = document.getElementById('sidebarAvatar');
+  if (userData.profilePic) {
+    av.innerHTML = `<img src="${userData.profilePic}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  } else {
+    av.textContent = (userData.name || 'U').charAt(0).toUpperCase();
+  }
+  document.getElementById('cartBtn').style.display = role === 'alianza' ? 'none' : 'flex';
+}
+
+function goTo(page) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) { el.classList.add('active'); renderPage(page, el); }
+  document.getElementById('topbarTitle').textContent = ROLES_CONFIG[role].nav.find(n=>n.id===page)?.label || page;
+  buildNav();
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+function rerenderCurrentPage() {
+  const el = document.getElementById('page-' + currentPage);
+  if (el && el.classList.contains('active')) renderPage(currentPage, el);
+}
+
+// ══════════════════════════════════════════
+// PAGE RENDERERS
+// ══════════════════════════════════════════
+function renderPage(page, el) {
+  switch(page) {
+    case 'inicio':        el.innerHTML = buildInicio(); break;
+    case 'tiendas':       el.innerHTML = buildTiendas(); break;
+    case 'ofertas':       el.innerHTML = buildOfertas(); break;
+    case 'perfil':        el.innerHTML = buildPerfil(); break;
+    case 'mi-tienda':     el.innerHTML = buildMiTienda(); break;
+    case 'pedidos':       el.innerHTML = buildPedidos(); break;
+    case 'admin-home':    el.innerHTML = buildAdminHome(); break;
+    case 'tiendas-admin': el.innerHTML = buildTiendasAdmin(); break;
+    case 'usuarios':      el.innerHTML = buildUsuarios(); break;
+  }
+  bindPageEvents(el);
+}
+
+// ── INICIO ──
+function buildInicio() {
+  const allProds = [...STATIC_PRODUCTS, ...alianzaProducts];
+  const filtered = selectedCat === 'Todos' ? allProds : allProds.filter(p => p.category === selectedCat);
+  const cats = ['Todos','Perros','Gatos','Snacks'];
+  return `
+    <div class="hero-banner">
+      <img src="${IMAGES.hero1}" alt="Banner Omora" loading="lazy">
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">🐾 Bienvenido, ${userData.name}</div>
+        <div class="hero-title">Todo lo que tu mascota necesita</div>
+        <div class="hero-sub">Envío gratis en compras mayores a $80.000</div>
+        <span class="hero-btn" data-page="tiendas">Ver Tiendas →</span>
+      </div>
+    </div>
+    ${alianzaProducts.length > 0 ? `
+      <div style="background:rgba(255,159,67,.12);border:1.5px solid rgba(255,159,67,.3);border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <i class="fa-solid fa-store" style="color:var(--orange)"></i>
+        <span style="font-weight:700;font-size:13px;color:var(--orange)">${alianzaProducts.length} producto${alianzaProducts.length>1?'s':''} de vendedores Alianza</span>
+      </div>` : ''}
+    <div class="cat-pills">
+      ${cats.map(c=>`<div class="cat-pill ${selectedCat===c?'active':''}" data-cat="${c}">
+        <i class="fa-solid ${c==='Todos'?'fa-paw':c==='Perros'?'fa-dog':c==='Gatos'?'fa-cat':'fa-bone'}"></i>${c}
+      </div>`).join('')}
+    </div>
+    <div class="section-head">
+      <h2>${selectedCat === 'Todos' ? 'Todos los productos' : selectedCat} 🐾</h2>
+      <span class="see-all">${filtered.length} productos</span>
+    </div>
+    <div class="grid-4">${filtered.map(prodCard).join('')}</div>`;
+}
+
+// ── TIENDAS ──
+function buildTiendas() {
+  const search = (document.getElementById('storeSearchInput')?.value || '').toLowerCase();
+  const filtered = allStores.filter(s =>
+    !search || (s.nombre||'').toLowerCase().includes(search) ||
+    (s.descripcion||'').toLowerCase().includes(search) ||
+    (s.instagram||'').toLowerCase().includes(search)
+  );
+  return `
+    <div style="background:var(--violet);border-radius:24px;padding:20px 24px 28px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div>
+          <div style="color:white;font-size:22px;font-weight:900;">Tiendas Alianza</div>
+          <div style="color:rgba(255,255,255,.8);font-size:13px;">Vendedores verificados</div>
+        </div>
+        <span style="background:rgba(255,255,255,.25);color:white;padding:6px 12px;border-radius:14px;font-weight:700;font-size:13px;">${allStores.length} tiendas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:white;border-radius:16px;padding:10px 16px;">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--violet)"></i>
+        <input id="storeSearchInput" type="text" placeholder="Buscar tienda, servicio..." value="${search}"
+          style="border:none;outline:none;font-family:inherit;font-size:14px;flex:1;">
+      </div>
+    </div>
+    ${filtered.length === 0 ? `
+      <div class="empty-state"><i class="fa-solid fa-store-slash"></i>
+        <p>${search ? `Sin resultados para "${search}"` : 'Aún no hay tiendas registradas'}</p>
+      </div>` :
+    `<div class="grid-2">${filtered.map(storeCard).join('')}</div>`}`;
+}
+
+// ── OFERTAS ──
+function buildOfertas() {
+  const offerProds = STATIC_PRODUCTS.filter(p => p.offer);
+  return `
+    <div style="text-align:center;padding:24px 0 28px;">
+      <div style="font-size:40px;margin-bottom:8px;">✨</div>
+      <h1 style="font-size:28px;font-weight:900;">Zona de Descuentos</h1>
+      <p style="color:var(--muted);margin-top:6px;">Aprovecha antes de que se agoten</p>
+    </div>
+    <div class="grid-4">${offerProds.map(prodCard).join('')}</div>`;
+}
+
+// ── PERFIL ──
+function buildPerfil() {
+  const history = userData.purchaseHistory || [];
+  return `
+    <div class="card-surface" style="padding:0;overflow:hidden;margin-bottom:16px;">
+      <img src="${IMAGES.cover}" class="profile-cover" alt="Cover">
+      <div class="profile-info-strip">
+        <div class="profile-avatar-wrap">
+          ${userData.profilePic ? `<img src="${userData.profilePic}" alt="avatar">` : (userData.name||'U').charAt(0).toUpperCase()}
+        </div>
+        <div>
+          <div class="profile-name">${userData.name}</div>
+          <div class="profile-email">${userData.email}</div>
+          ${role==='cliente' ? `<span class="tag tag-violet" style="margin-top:6px;"><i class="fa-solid fa-star"></i> ${userData.points} Omora Points</span>` : ''}
+          ${role==='alianza' ? `<span class="tag tag-orange" style="margin-top:6px;"><i class="fa-solid fa-store"></i> Vendedor Alianza</span>` : ''}
+          ${role==='admin'   ? `<span class="tag tag-red" style="margin-top:6px;"><i class="fa-solid fa-shield"></i> Administrador</span>` : ''}
+        </div>
+      </div>
+    </div>
+    ${role === 'cliente' ? `
+    <div class="card-surface">
+      <div class="section-head" style="margin-bottom:14px;"><h2>Mis Compras</h2></div>
+      ${history.length === 0 ? `<div class="empty-state"><i class="fa-solid fa-bag-shopping"></i><p>Aún no tienes compras registradas</p></div>` : `
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>Pedido</th><th>Fecha</th><th>Total</th><th>Estado</th></tr></thead>
+          <tbody>${history.map(o=>`<tr>
+            <td><b>${o.id||'—'}</b></td>
+            <td>${o.date||o.fecha||'—'}</td>
+            <td><b>${fmt(o.total||0)}</b></td>
+            <td><span class="status-pill ${statusClass(o.status||o.estado||'')}">${o.status||o.estado||'—'}</span></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`}
+    </div>` : ''}
+    <div class="card-surface">
+      <div class="option-row" id="openFavSecPage"><i class="fa-regular fa-heart"></i><span>Mis Favoritos <span class="tag tag-violet" style="margin-left:8px;">${favIds.size}</span></span><i class="fa-solid fa-chevron-right chevron"></i></div>
+      <div class="option-row"><i class="fa-solid fa-bell"></i><span>Notificaciones</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+      <div class="option-row"><i class="fa-solid fa-lock"></i><span>Seguridad</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+      <div class="option-row" id="logoutBtn" style="color:var(--red);"><i class="fa-solid fa-right-from-bracket" style="color:var(--red)"></i><span>Cerrar Sesión</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+    </div>`;
+}
+
+// ── MI TIENDA (Alianza) ──
+function buildMiTienda() {
+  const activeCount = myProducts.filter(p => p.activo && !p.archivado).length;
+  const archivedCount = myProducts.filter(p => p.archivado).length;
+  const storeConfig = myStoreData || {};
+
+  return `
+    <div class="store-hero-admin">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+        <div style="width:52px;height:52px;border-radius:26px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
+          ${storeConfig.logoUrl ? `<img src="${storeConfig.logoUrl}" style="width:100%;height:100%;object-fit:contain;">` : `<i class="fa-solid fa-store" style="color:white;font-size:22px;"></i>`}
+        </div>
+        <div style="flex:1;">
+          <div style="color:white;font-size:18px;font-weight:900;">${storeConfig.nombre || 'Mi Tienda Alianza'}</div>
+          <div style="color:rgba(255,255,255,.75);font-size:12px;">Panel de vendedor · ${userData.name}</div>
+        </div>
+        ${myStoreData ? `<button id="previewMyStoreBtn" style="padding:10px;background:rgba(255,255,255,.2);border-radius:14px;color:white;">
+          <i class="fa-solid fa-eye"></i></button>` : ''}
+      </div>
+      <div class="store-tabs">
+        <div class="store-tab ${storeTab==='productos'?'active':''}" data-tab="productos">Productos</div>
+        <div class="store-tab ${storeTab==='configurar'?'active':''}" data-tab="configurar">Mi Tienda</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+      ${[['Total',myProducts.length,'var(--violet)'],['Activos',activeCount,'var(--green)'],['Archivados',archivedCount,'var(--muted)']].map(([l,v,c])=>`
+        <div class="card-surface" style="text-align:center;padding:16px;">
+          <div style="font-size:22px;font-weight:900;color:${c}">${v}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">${l}</div>
+        </div>`).join('')}
+    </div>
+
+    ${storeTab === 'productos' ? buildProductosTab() : buildConfigurarTab(storeConfig)}`;
+}
+
+function buildProductosTab() {
+  return `
+    <button id="newProdBtn" class="btn-primary" style="width:100%;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;">
+      <i class="fa-solid fa-plus"></i> Publicar nuevo producto
+    </button>
+    ${myProducts.length === 0 ? `<div class="empty-state"><i class="fa-solid fa-box-open"></i><p>Aún no tienes productos publicados</p></div>` :
+    myProducts.map(prod => {
+      const d = disc(prod.precio, prod.memberPrice);
+      return `
+        <div class="my-prod-card">
+          <img class="my-prod-img" src="${prod.imagenUrl||''}" alt="${prod.nombre||''}">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:13px;margin-bottom:4px;">${prod.nombre||'Sin nombre'}</div>
+            <div style="font-weight:900;color:var(--violet);">${fmt(prod.precio||0)}</div>
+            ${d ? `<div style="font-size:11px;color:var(--red);font-weight:700;">Socio: ${fmt(prod.memberPrice)} (−${d}%)</div>` : ''}
+            <span class="tag ${prod.archivado?'tag-red':prod.activo?'tag-green':'tag-orange'}" style="margin-top:6px;">
+              ${prod.archivado?'Archivado':prod.activo?'● Activo':'● Inactivo'}
+            </span>
+          </div>
+          <div class="my-prod-actions">
+            <button class="icon-btn" data-edit="${prod.id}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+            <button class="icon-btn" data-archive="${prod.id}" data-archived="${prod.archivado?'1':'0'}" title="${prod.archivado?'Activar':'Archivar'}">
+              <i class="fa-solid ${prod.archivado?'fa-eye':'fa-box-archive'}"></i>
+            </button>
+            <button class="icon-btn danger" data-delete-prod="${prod.id}" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`}).join('')}`;
+}
+
+function buildConfigurarTab(cfg) {
+  return `
+    <div class="card-surface">
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:4px;">Perfil de tu tienda</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Esta información es visible para todos los compradores</p>
+
+      <label class="form-label">Logo de la tienda</label>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+        <div style="width:60px;height:60px;border-radius:30px;border:3px solid var(--violet);overflow:hidden;background:var(--violet-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          ${cfg.logoUrl ? `<img src="${cfg.logoUrl}" style="width:100%;height:100%;object-fit:contain;">` : `<i class="fa-solid fa-store" style="color:var(--violet);font-size:20px;"></i>`}
+        </div>
+        <div>
+          <label class="form-label" style="margin:0 0 4px;font-size:11px;">URL del logo</label>
+          <input id="cfg-logo" class="form-input" placeholder="https://..." value="${cfg.logoUrl||''}">
+        </div>
+      </div>
+
+      <label class="form-label">Nombre de la tienda *</label>
+      <input id="cfg-nombre" class="form-input" placeholder="Ej: Petshop La Huella" value="${cfg.nombre||''}">
+
+      <label class="form-label">Descripción</label>
+      <textarea id="cfg-desc" class="form-input form-textarea" placeholder="Cuéntales a tus clientes qué vendes...">${cfg.descripcion||''}</textarea>
+
+      <label class="form-label">Horario de atención</label>
+      <input id="cfg-horario" class="form-input" placeholder="Ej: Lun-Vie 9am-6pm" value="${cfg.horario||''}">
+
+      <label class="form-label">Instagram</label>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;">
+        <i class="fa-brands fa-instagram" style="color:#C13584;font-size:18px;"></i>
+        <input id="cfg-ig" style="border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;flex:1;" placeholder="tu_tienda" value="${cfg.instagram||''}">
+      </div>
+
+      <label class="form-label">WhatsApp</label>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:20px;">
+        <i class="fa-brands fa-whatsapp" style="color:#25D366;font-size:18px;"></i>
+        <input id="cfg-wa" style="border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;flex:1;" placeholder="+57 300 000 0000" value="${cfg.whatsapp||''}">
+      </div>
+
+      <label class="form-label">Imágenes del banner (URLs, una por línea)</label>
+      <textarea id="cfg-banners" class="form-input form-textarea" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg" style="min-height:80px;">${(cfg.bannerImages||[]).join('\n')}</textarea>
+
+      <button id="saveStoreCfgBtn" class="btn-primary" style="width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;">
+        <i class="fa-solid fa-check"></i> Guardar configuración
+      </button>
+    </div>`;
+}
+
+// ── PEDIDOS (Alianza) ──
+function buildPedidos() {
+  return `
+    <div class="section-head"><h2>Pedidos</h2></div>
+    <div class="empty-state"><i class="fa-solid fa-bag-shopping"></i><p>Los pedidos aparecerán aquí cuando los clientes compren tus productos</p></div>`;
+}
+
+// ── ADMIN HOME ──
+function buildAdminHome() {
+  return `
+    <div class="stats-row">
+      ${[
+        { icon:'fa-users', color:'var(--violet)', bg:'var(--violet-dim)', val:'—', label:'Usuarios totales' },
+        { icon:'fa-store', color:'var(--orange)', bg:'var(--orange-dim)', val:String(allStores.length), label:'Tiendas alianza' },
+        { icon:'fa-box', color:'var(--green)', bg:'rgba(46,204,113,.12)', val:String(alianzaProducts.length), label:'Productos activos' },
+        { icon:'fa-chart-line', color:'var(--red)', bg:'rgba(226,75,74,.1)', val:'—', label:'GMV mensual' },
+      ].map(s=>`
+        <div class="stat-card">
+          <div class="stat-icon" style="background:${s.bg};color:${s.color}"><i class="fa-solid ${s.icon}"></i></div>
+          <div class="stat-value">${s.val}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>`).join('')}
+    </div>
+    <div class="section-head"><h2>Resumen</h2></div>
+    <div class="alert-card">
+      <div class="alert-icon" style="background:var(--violet-dim);color:var(--violet)"><i class="fa-solid fa-store"></i></div>
+      <div><div class="alert-title">${allStores.length} tiendas registradas en Omora</div><div class="alert-sub">Gestiona desde la pestaña Tiendas</div></div>
+    </div>
+    <div class="alert-card">
+      <div class="alert-icon" style="background:rgba(46,204,113,.12);color:var(--green)"><i class="fa-solid fa-box"></i></div>
+      <div><div class="alert-title">${alianzaProducts.length} productos activos de alianza</div><div class="alert-sub">Publicados por vendedores verificados</div></div>
+    </div>`;
+}
+
+// ── TIENDAS ADMIN ──
+function buildTiendasAdmin() {
+  return `
+    <div class="section-head"><h2>Gestión de Tiendas</h2></div>
+    <div class="card-surface" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>Tienda</th><th>Instagram</th><th>Productos</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody>
+            ${allStores.length === 0 ? `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">No hay tiendas registradas</td></tr>` :
+            allStores.map(s=>`<tr>
+              <td><div style="display:flex;align-items:center;gap:10px;">
+                ${s.bannerImages?.[0] ? `<img src="${s.bannerImages[0]}" style="width:48px;height:48px;border-radius:12px;object-fit:cover;">` : `<div style="width:48px;height:48px;border-radius:12px;background:var(--violet-dim);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-store" style="color:var(--violet)"></i></div>`}
+                <span style="font-weight:700;">${s.nombre||'Sin nombre'}</span>
+              </div></td>
+              <td>${s.instagram ? '@'+s.instagram : '—'}</td>
+              <td>${alianzaProducts.filter(p=>p.vendedorId===s.vendedorId).length}</td>
+              <td><span class="tag tag-green"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Activa</span></td>
+              <td><button class="see-all" data-view-store="${s.id}">Ver →</button>
+                  <button style="color:var(--red);font-weight:700;font-size:13px;margin-left:8px;" data-admin-delete-store="${s.id}">Eliminar</button>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ── USUARIOS ADMIN ──
+function buildUsuarios() {
+  return `
+    <div class="section-head"><h2>Usuarios</h2></div>
+    <div class="empty-state"><i class="fa-solid fa-users"></i>
+      <p>La lista de usuarios requiere permisos de administrador de Firestore.<br>Configura reglas de seguridad para acceder a esta colección.</p>
+    </div>`;
+}
+
+// ══════════════════════════════════════════
+// CARD BUILDERS
+// ══════════════════════════════════════════
+function prodCard(item) {
+  const d = disc(item.price, item.memberPrice);
+  const isFav = favIds.has(item.id);
+  return `
+    <div class="prod-card" data-prod="${item.id}" data-source="${item.source||'static'}">
+      <div class="prod-img-wrap">
+        <img class="prod-img" src="${item.image}" alt="${item.name}" loading="lazy">
+        <div class="prod-badges">
+          <span>${item.offer ? `<span class="badge badge-oferta">OFERTA</span>` : ''}</span>
+          <span>${item.source==='alianza' ? `<span class="badge badge-alianza">ALIANZA</span>` : d ? `<span class="badge badge-desc">−${d}%</span>` : ''}</span>
+        </div>
+        ${isFav ? `<div style="position:absolute;top:10px;right:10px;z-index:5;"><i class="fa-solid fa-heart" style="color:var(--red);font-size:14px;"></i></div>` : ''}
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">${item.brand}</div>
+        <div class="prod-name">${item.name}</div>
+        ${item.source==='alianza' && item.vendedorId ? `<div class="prod-store-tag" data-view-store="${item.vendedorId}"><i class="fa-solid fa-store"></i>${item.vendedorNombre||item.brand}</div>` : ''}
+        <div class="prod-footer">
+          <div class="prod-price-block">
+            ${d ? `<span class="prod-strike">${fmt(item.price)}</span>` : ''}
+            <span class="prod-price ${d?'discounted':''}">${fmt(d?item.memberPrice:item.price)}</span>
+          </div>
+          <button class="btn-add" data-add="${item.id}" data-source="${item.source||'static'}"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function storeCard(s) {
+  const banner = s.bannerImages?.[0] || '';
+  return `
+    <div class="store-card" data-view-store="${s.id}">
+      ${banner ? `<img class="store-card-banner" src="${banner}" alt="${s.nombre}" loading="lazy">` :
+        `<div class="store-card-banner" style="display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-store" style="font-size:36px;color:var(--violet);"></i>
+        </div>`}
+      <div class="store-card-body">
+        <div class="store-card-row">
+          <div class="store-card-logo">
+            ${s.logoUrl ? `<img src="${s.logoUrl}" alt="${s.nombre}" style="object-fit:contain;">` : `<i class="fa-solid fa-store"></i>`}
+          </div>
+          <div>
+            <div class="store-card-name">${s.nombre||'Tienda'}</div>
+            <span class="alianza-pill"><i class="fa-solid fa-circle-check"></i> Alianza Omora</span>
+          </div>
+        </div>
+        ${s.descripcion ? `<div class="store-card-desc">${s.descripcion}</div>` : ''}
+        <div class="store-meta">
+          ${s.horario ? `<div class="store-meta-i"><i class="fa-regular fa-clock" style="color:var(--violet)"></i>${s.horario}</div>` : ''}
+          ${s.instagram ? `<div class="store-meta-i" style="color:#C13584"><i class="fa-brands fa-instagram"></i>@${s.instagram}</div>` : ''}
+          ${s.whatsapp ? `<div class="store-meta-i" style="color:#25D366"><i class="fa-brands fa-whatsapp"></i>WhatsApp</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════
+// EVENT BINDING
+// ══════════════════════════════════════════
+function bindPageEvents(el) {
+  // Category pills
+  el.querySelectorAll('[data-cat]').forEach(e => e.addEventListener('click', () => {
+    selectedCat = e.dataset.cat; goTo('inicio');
+  }));
+  // Product cards → open detail
+  el.querySelectorAll('[data-prod]').forEach(e => e.addEventListener('click', ev => {
+    if (ev.target.closest('[data-add]') || ev.target.closest('[data-view-store]')) return;
+    openDetail(e.dataset.prod, e.dataset.source);
+  }));
+  // Add to cart
+  el.querySelectorAll('[data-add]').forEach(e => e.addEventListener('click', ev => {
+    ev.stopPropagation();
+    addToCart(e.dataset.add, e.dataset.source);
+  }));
+  // View store (from prod card tag)
+  el.querySelectorAll('[data-view-store]').forEach(e => e.addEventListener('click', ev => {
+    ev.stopPropagation();
+    openStore(e.dataset.viewStore);
+  }));
+  // Navigate
+  el.querySelectorAll('[data-page]').forEach(e => e.addEventListener('click', () => goTo(e.dataset.page)));
+  // Logout
+  const lb = el.querySelector('#logoutBtn');
+  if (lb) lb.addEventListener('click', async () => { await signOut(auth); });
+
+  // static favorites/notifs/security
+  const fav = el.querySelector('#openFavSecPage');
+  if (fav) fav.addEventListener('click', () => {
+    window.location.href = './favoritos.html';
+  });
+
+  // Redirect from Perfil (static options)
+  // En buildPerfil() los IDs NO existen aquí, así que los clicks se manejan por clase.
+  el.querySelectorAll('.option-row').forEach(row => {
+    const txt = (row.textContent || '').trim().toLowerCase();
+    if (txt.includes('notificaciones')) {
+      row.addEventListener('click', () => window.location.href = './notificaciones.html');
+    } else if (txt.includes('seguridad')) {
+      row.addEventListener('click', () => window.location.href = './seguridad.html');
+    }
+  });
+
+
+
+  // Tienda search
+  const si = el.querySelector('#storeSearchInput');
+  if (si) si.addEventListener('input', () => rerenderCurrentPage());
+  // Store tab
+  el.querySelectorAll('[data-tab]').forEach(e => e.addEventListener('click', () => {
+    storeTab = e.dataset.tab; rerenderCurrentPage();
+  }));
+  // New product
+  const np = el.querySelector('#newProdBtn');
+  if (np) np.addEventListener('click', () => openProdForm(null));
+  // Save store config
+  const sc = el.querySelector('#saveStoreCfgBtn');
+  if (sc) sc.addEventListener('click', saveStoreConfig);
+  // Preview my store
+  const ps = el.querySelector('#previewMyStoreBtn');
+  if (ps) ps.addEventListener('click', () => openStore(userData.uid));
+  // Edit product
+  el.querySelectorAll('[data-edit]').forEach(e => e.addEventListener('click', () => {
+    const prod = myProducts.find(p => p.id === e.dataset.edit);
+    if (prod) openProdForm(prod);
+  }));
+  // Archive/unarchive
+  el.querySelectorAll('[data-archive]').forEach(e => e.addEventListener('click', async () => {
+    const prod = myProducts.find(p => p.id === e.dataset.archive);
+    if (!prod) return;
+    const newArchivado = !prod.archivado;
+    try {
+      await updateDoc(doc(db, 'productos_alianza', prod.id), { archivado: newArchivado, activo: !newArchivado });
+      showToast(newArchivado ? 'Producto archivado' : 'Producto activado');
+    } catch { showToast('Error al actualizar producto'); }
+  }));
+  // Delete product
+  el.querySelectorAll('[data-delete-prod]').forEach(e => e.addEventListener('click', () => deleteProduct(e.dataset.deleteProd)));
+  // Admin: view store
+  el.querySelectorAll('[data-view-store]').forEach(e => e.addEventListener('click', ev => {
+    ev.stopPropagation();
+    openStore(e.dataset.viewStore);
+  }));
+  // Admin: delete store
+  el.querySelectorAll('[data-admin-delete-store]').forEach(e => e.addEventListener('click', () => adminDeleteStore(e.dataset.adminDeleteStore)));
+}
+
+// ══════════════════════════════════════════
+// STORE MODAL
+// ══════════════════════════════════════════
+async function openStore(storeId) {
+  if (!storeId) return;
+  const modal = document.getElementById('storeModal');
+  const content = document.getElementById('storeModalContent');
+  content.innerHTML = `<div style="padding:40px;text-align:center;"><span class="spinner"></span></div>`;
+  modal.classList.add('show');
+
+  try {
+    const snap = await getDoc(doc(db, 'tiendas', storeId));
+    if (!snap.exists()) { content.innerHTML = `<div class="empty-state"><i class="fa-solid fa-store-slash"></i><p>Tienda no disponible</p></div>`; return; }
+    const store = { id: snap.id, vendedorId: snap.id, ...snap.data() };
+
+    // Get store products
+    const q = query(collection(db, 'productos_alianza'), where('vendedorId','==',storeId), where('activo','==',true));
+    const pSnap = await getDocs(q);
+    const prods = pSnap.docs.map(d => ({
+      id:d.id, source:'alianza',
+      category: d.data().categoria||'Otros', name: d.data().nombre||'Sin nombre',
+      brand: d.data().vendedorNombre||'Alianza', price: d.data().precio||0,
+      memberPrice: d.data().memberPrice||d.data().precio||0,
+      image: d.data().imagenUrl||'', description: d.data().descripcion||'',
+      benefits: d.data().beneficios||'', vendedorId: d.data().vendedorId||'',
+      vendedorNombre: d.data().vendedorNombre||'', ...d.data(),
+    }));
+
+    const banners = store.bannerImages?.length > 0 ? store.bannerImages : [];
+    content.innerHTML = `
+      ${banners.length > 0 ? `
+        <div style="width:100%;height:220px;overflow:hidden;border-radius:0;">
+          <img src="${banners[0]}" style="width:100%;height:100%;object-fit:cover;">
+        </div>` : `<div style="width:100%;height:120px;background:var(--violet);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-store" style="font-size:48px;color:white;"></i></div>`}
+      <div style="padding:20px 24px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+          <div style="width:60px;height:60px;border-radius:30px;border:3px solid var(--violet);overflow:hidden;background:var(--violet-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            ${store.logoUrl ? `<img src="${store.logoUrl}" style="width:100%;height:100%;object-fit:contain;">` : `<i class="fa-solid fa-store" style="color:var(--violet);font-size:22px;"></i>`}
+          </div>
+          <div>
+            <div style="font-size:20px;font-weight:900;">${store.nombre||'Tienda'}</div>
+            <span class="alianza-pill"><i class="fa-solid fa-circle-check"></i> Alianza Omora</span>
+          </div>
+        </div>
+        ${store.descripcion ? `<p style="font-size:14px;color:var(--muted);margin-bottom:12px;">${store.descripcion}</p>` : ''}
+        <div class="store-meta" style="margin-bottom:16px;">
+          ${store.horario ? `<div class="store-meta-i"><i class="fa-regular fa-clock" style="color:var(--violet)"></i>${store.horario}</div>` : ''}
+          ${store.instagram ? `<div class="store-meta-i" style="color:#C13584"><i class="fa-brands fa-instagram"></i>@${store.instagram}</div>` : ''}
+          ${store.whatsapp ? `<div class="store-meta-i" style="color:#25D366"><i class="fa-brands fa-whatsapp"></i>${store.whatsapp}</div>` : ''}
+        </div>
+        ${role === 'admin' ? `<button data-admin-delete-store="${storeId}" style="color:var(--red);font-weight:700;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-trash"></i> Eliminar tienda</button>` : ''}
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:14px;">Productos (${prods.length})</h3>
+        ${prods.length === 0 ? `<div class="empty-state" style="padding:20px;"><i class="fa-solid fa-box-open"></i><p>Sin productos activos</p></div>` :
+        `<div class="grid-2">${prods.map(prodCard).join('')}</div>`}
+      </div>`;
+
+    content.querySelectorAll('[data-prod]').forEach(e => e.addEventListener('click', ev => {
+      if (ev.target.closest('[data-add]')) return;
+      openDetail(e.dataset.prod, e.dataset.source);
+    }));
+    content.querySelectorAll('[data-add]').forEach(e => e.addEventListener('click', ev => {
+      ev.stopPropagation(); addToCart(e.dataset.add, e.dataset.source);
+    }));
+    content.querySelectorAll('[data-admin-delete-store]').forEach(e => e.addEventListener('click', () => adminDeleteStore(e.dataset.adminDeleteStore)));
+  } catch (err) {
+    content.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Error al cargar la tienda</p></div>`;
+  }
+}
+
+// ══════════════════════════════════════════
+// PRODUCT DETAIL MODAL
+// ══════════════════════════════════════════
+function findProduct(id, source) {
+  if (source === 'alianza') return alianzaProducts.find(p => p.id === id);
+  return STATIC_PRODUCTS.find(p => p.id === id) || alianzaProducts.find(p => p.id === id);
+}
+
+function openDetail(id, source) {
+  detailProduct = findProduct(id, source);
+  activeTab = 'beneficios';
+  if (!detailProduct) return;
+  renderDetail();
+  document.getElementById('detailModal').classList.add('show');
+}
+
+function renderDetail() {
+  const p = detailProduct;
+  if (!p) return;
+  const d = disc(p.price, p.memberPrice);
+  const isFav = favIds.has(p.id);
+  document.getElementById('detailContent').innerHTML = `
+    <img class="det-img" src="${p.image}" alt="${p.name}" loading="lazy">
+    <div class="det-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="det-brand">${p.brand}</span>
+        ${d ? `<span class="tag tag-red">−${d}%</span>` : ''}
+      </div>
+      ${p.source==='alianza' && p.vendedorId ? `
+        <div class="prod-store-tag" data-view-store="${p.vendedorId}" style="margin:8px 0;">
+          <i class="fa-solid fa-store"></i>${p.vendedorNombre||p.brand} — Ver tienda →
+        </div>` : ''}
+      <div class="det-title">${p.name}</div>
+      <div class="det-price-row">
+        <div>
+          ${d ? `<div class="det-strike">${fmt(p.price)}</div>` : ''}
+          <div class="det-price ${d?'red':''}">${fmt(d?p.memberPrice:p.price)}</div>
+        </div>
+        ${p.memberPrice && p.memberPrice !== p.price ? `
+          <div class="member-chip">
+            <div class="lbl">Socio Omora 👑</div>
+            <div class="val">${fmt(p.memberPrice)}</div>
+          </div>` : ''}
+      </div>
+      <div class="tabs">
+        <button class="tab-btn ${activeTab==='beneficios'?'active':''}" data-tab="beneficios">Beneficios</button>
+        <button class="tab-btn ${activeTab==='desc'?'active':''}" data-tab="desc">Descripción</button>
+      </div>
+      <div class="det-text">${(activeTab==='beneficios'?p.benefits:p.description)||'—'}</div>
+      <div class="det-actions">
+        <button class="btn-fav ${isFav?'active':''}" id="favBtn">
+          <i class="fa-${isFav?'solid':'regular'} fa-heart"></i>
+        </button>
+        <button class="btn-primary" id="addFromDetail">AÑADIR AL CARRITO</button>
+      </div>
+      ${role==='admin' ? `<button id="adminDeleteProd" style="color:var(--red);font-weight:700;font-size:13px;margin-top:16px;display:flex;align-items:center;gap:6px;width:100%;justify-content:center;border:1.5px solid rgba(226,75,74,.3);border-radius:14px;padding:12px;">
+        <i class="fa-solid fa-trash"></i> Eliminar producto</button>` : ''}
+    </div>`;
+
+  document.querySelectorAll('#detailContent .tab-btn').forEach(b => b.addEventListener('click', () => { activeTab = b.dataset.tab; renderDetail(); }));
+  document.getElementById('favBtn').addEventListener('click', () => toggleFav(p));
+  document.getElementById('addFromDetail').addEventListener('click', () => {
+    addToCart(p.id, p.source); document.getElementById('detailModal').classList.remove('show');
+  });
+  const dp = document.getElementById('adminDeleteProd');
+  if (dp) dp.addEventListener('click', () => { document.getElementById('detailModal').classList.remove('show'); deleteProduct(p.id); });
+  const st = document.querySelector('#detailContent [data-view-store]');
+  if (st) st.addEventListener('click', ev => { ev.stopPropagation(); document.getElementById('detailModal').classList.remove('show'); openStore(st.dataset.viewStore); });
+}
+
+// ══════════════════════════════════════════
+// FAVORITES
+// ══════════════════════════════════════════
+async function toggleFav(item) {
+  if (!userData.uid) return;
+  const favRef = doc(db, 'usuarios', userData.uid, 'favoritos', item.id);
+  try {
+    if (favIds.has(item.id)) {
+      await deleteDoc(favRef);
+      showToast('Eliminado de favoritos');
+    } else {
+      await setDoc(favRef, { ...item, addedAt: serverTimestamp() });
+      showToast('¡Añadido a favoritos ❤️');
+    }
+  } catch { showToast('Error al actualizar favoritos'); }
+}
+
+// ══════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════
+function addToCart(id, source) {
+  const prod = findProduct(id, source);
+  if (!prod) return;
+  const ex = cart.find(i => i.id === id);
+  if (ex) ex.qty++; else cart.push({ ...prod, qty:1 });
+  updateCartBadge();
+  showToast(`${prod.name.slice(0,26)}… añadido 🛒`);
+}
+
+function updateCartBadge() {
+  const badge = document.getElementById('cartBadge');
+  if (cart.length) { badge.style.display='flex'; badge.textContent=cart.reduce((t,i)=>t+i.qty,0); }
+  else badge.style.display='none';
+}
+
+function renderCart() {
+  const el = document.getElementById('cartItemsEl');
+  const ft = document.getElementById('cartFootEl');
+  if (!cart.length) {
+    el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-cart-shopping" style="font-size:60px;"></i><p>Tu carrito está vacío</p></div>`;
+    ft.innerHTML=''; return;
+  }
+  el.innerHTML = cart.map(item=>`
+    <div class="cart-item">
+      <img class="cart-item-img" src="${item.image}" alt="${item.name}">
+      <div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${fmt(item.price * item.qty)}</div>
+      </div>
+      <div class="qty-ctrl">
+        <button data-qty="sub" data-id="${item.id}"><i class="fa-solid fa-circle-minus"></i></button>
+        <span>${item.qty}</span>
+        <button data-qty="add" data-id="${item.id}"><i class="fa-solid fa-circle-plus"></i></button>
+      </div>
+    </div>`).join('');
+  const total = cart.reduce((t,i)=>t+i.price*i.qty,0);
+  ft.innerHTML = `
+    <div class="cart-foot">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total estimado</span>
+        <span class="cart-total-val">${fmt(total)}</span>
+      </div>
+      <button class="btn-primary" id="checkoutBtn">FINALIZAR COMPRA</button>
+    </div>`;
+  el.querySelectorAll('[data-qty]').forEach(b => b.addEventListener('click', () => {
+    const item = cart.find(i=>i.id===b.dataset.id);
+    if (!item) return;
+    if (b.dataset.qty==='sub' && item.qty===1) cart=cart.filter(i=>i.id!==b.dataset.id);
+    else item.qty += b.dataset.qty==='add'?1:-1;
+    updateCartBadge(); renderCart();
+  }));
+  document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+    cart=[]; updateCartBadge(); renderCart();
+    document.getElementById('cartModal').classList.remove('show');
+    showToast('¡Pedido procesado! 🎉');
+  });
+}
+
+// ══════════════════════════════════════════
+// PRODUCTO FORM (Alianza)
+// ══════════════════════════════════════════
+function openProdForm(prod) {
+  editingProd = prod;
+  const isEdit = !!prod;
+  const d = isEdit && prod.precio && prod.memberPrice && prod.memberPrice < prod.precio;
+  document.getElementById('prodFormContent').innerHTML = `
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:4px;">${isEdit?'Editar':'Nuevo'} Producto</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:20px;">${isEdit?'Actualiza la información del producto':'Publica un nuevo producto en Omora'}</p>
+
+    <label class="form-label">Nombre del producto *</label>
+    <input id="pf-nombre" class="form-input" placeholder="Ej: Collar reflectivo para perros" value="${isEdit?prod.nombre||'':''}">
+
+    <label class="form-label">Descripción</label>
+    <textarea id="pf-desc" class="form-input form-textarea" placeholder="Cuéntale a los compradores sobre tu producto...">${isEdit?prod.descripcion||'':''}</textarea>
+
+    <label class="form-label">Beneficios</label>
+    <textarea id="pf-benefits" class="form-input form-textarea" placeholder="• Beneficio 1&#10;• Beneficio 2">${isEdit?prod.beneficios||'':''}</textarea>
+
+    <label class="form-label">URL de imagen del producto *</label>
+    <input id="pf-img" class="form-input" placeholder="https://ejemplo.com/imagen.jpg" value="${isEdit?prod.imagenUrl||'':''}">
+
+    <div class="form-input-row">
+      <div style="flex:1;">
+        <label class="form-label">Precio normal (COP) *</label>
+        <input id="pf-precio" class="form-input" type="number" placeholder="35000" value="${isEdit?prod.precio||'':''}">
+      </div>
+      <div style="flex:1;">
+        <label class="form-label">Precio Socio 👑 <span style="font-weight:400;color:var(--muted);font-size:11px;">(opcional)</span></label>
+        <input id="pf-mprice" class="form-input" type="number" placeholder="28000" value="${isEdit&&prod.memberPrice<prod.precio?prod.memberPrice||'':''}">
+      </div>
+    </div>
+    <div id="discountPreview"></div>
+
+    <label class="form-label">Categoría</label>
+    <div class="cat-chips" id="pfCatChips">
+      ${['Perros','Gatos','Snacks','Otros'].map(c=>`<div class="cat-chip ${(isEdit?prod.categoria||'Perros':'Perros')===c?'active':''}" data-chip="${c}">${c}</div>`).join('')}
+    </div>
+
+    <button id="pfSubmit" class="btn-primary" style="width:100%;margin-top:24px;padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <i class="fa-solid ${isEdit?'fa-check':'fa-cloud-arrow-up'}"></i> ${isEdit?'Guardar cambios':'Publicar en Omora'}
+    </button>
+    ${isEdit ? `<button id="pfDelete" style="width:100%;margin-top:10px;padding:12px;border-radius:14px;border:1.5px solid rgba(226,75,74,.3);color:var(--red);font-weight:700;font-size:14px;">
+      <i class="fa-solid fa-trash"></i> Eliminar producto
+    </button>` : ''}`;
+
+  document.getElementById('prodFormModal').classList.add('show');
+
+  // Category chips
+  let selectedCatForm = isEdit ? prod.categoria||'Perros' : 'Perros';
+  document.querySelectorAll('#pfCatChips .cat-chip').forEach(c => c.addEventListener('click', () => {
+    selectedCatForm = c.dataset.chip;
+    document.querySelectorAll('#pfCatChips .cat-chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  }));
+
+  // Discount preview
+  const updateDiscount = () => {
+    const p = Number(document.getElementById('pf-precio')?.value||0);
+    const m = Number(document.getElementById('pf-mprice')?.value||0);
+    const prev = document.getElementById('discountPreview');
+    if (!prev) return;
+    if (p > 0 && m > 0 && m < p) {
+      const pct = Math.round((p-m)/p*100);
+      prev.innerHTML = `<div class="discount-preview">
+        <div class="discount-pct-circle">−${pct}%</div>
+        <div><div style="font-weight:800;color:var(--red);">¡Descuento para socios!</div>
+          <div style="font-size:13px;"><span style="text-decoration:line-through;color:var(--muted)">${fmt(p)}</span> → <strong style="color:var(--red)">${fmt(m)}</strong></div>
+          <div style="font-size:11px;color:var(--green);font-weight:700;">Ahorro: ${fmt(p-m)}</div>
+        </div></div>`;
+    } else { prev.innerHTML = ''; }
+  };
+  document.getElementById('pf-precio')?.addEventListener('input', updateDiscount);
+  document.getElementById('pf-mprice')?.addEventListener('input', updateDiscount);
+  if (isEdit) updateDiscount();
+
+  // Submit
+  document.getElementById('pfSubmit')?.addEventListener('click', async () => {
+    const nombre = document.getElementById('pf-nombre')?.value.trim();
+    const descripcion = document.getElementById('pf-desc')?.value.trim();
+    const beneficios = document.getElementById('pf-benefits')?.value.trim();
+    const imagenUrl = document.getElementById('pf-img')?.value.trim();
+    const precio = Number(document.getElementById('pf-precio')?.value);
+    const memberPriceRaw = document.getElementById('pf-mprice')?.value.trim();
+    const memberPrice = memberPriceRaw ? Number(memberPriceRaw) : precio;
+
+    if (!nombre || !precio || !imagenUrl) { showToast('Nombre, precio e imagen son obligatorios'); return; }
+    if (isNaN(precio) || precio <= 0) { showToast('Precio inválido'); return; }
+    if (memberPriceRaw && (isNaN(memberPrice) || memberPrice <= 0 || memberPrice >= precio)) { showToast('Precio socio debe ser menor al precio normal'); return; }
+
+    const btn = document.getElementById('pfSubmit');
+    btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;margin:0 auto;"></span>';
+
+    try {
+      const data = {
+        nombre, descripcion, beneficios, imagenUrl, precio, memberPrice,
+        categoria: selectedCatForm,
+        vendedorId: userData.uid,
+        vendedorNombre: myStoreData?.nombre || userData.name,
+        activo: true, archivado: false,
+      };
+      if (isEdit) {
+        await updateDoc(doc(db, 'productos_alianza', prod.id), data);
+        showToast('Producto actualizado ✓');
+      } else {
+        data.fechaCreacion = serverTimestamp();
+        await addDoc(collection(db, 'productos_alianza'), data);
+        showToast('¡Producto publicado en Omora! 🎉');
+      }
+      document.getElementById('prodFormModal').classList.remove('show');
+    } catch { showToast('Error al guardar producto'); btn.innerHTML = `<i class="fa-solid fa-check"></i> ${isEdit?'Guardar':'Publicar'}`; }
+  });
+
+  // Delete (edit mode)
+  document.getElementById('pfDelete')?.addEventListener('click', () => {
+    document.getElementById('prodFormModal').classList.remove('show');
+    setTimeout(() => deleteProduct(prod.id), 300);
+  });
+}
+
+async function deleteProduct(id) {
+  if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) return;
+  try {
+    await deleteDoc(doc(db, 'productos_alianza', id));
+    showToast('Producto eliminado');
+  } catch { showToast('Error al eliminar'); }
+}
+
+// ══════════════════════════════════════════
+// SAVE STORE CONFIG
+// ══════════════════════════════════════════
+async function saveStoreConfig() {
+  const nombre = document.getElementById('cfg-nombre')?.value.trim();
+  if (!nombre) { showToast('El nombre es obligatorio'); return; }
+  const bannerRaw = document.getElementById('cfg-banners')?.value||'';
+  const bannerImages = bannerRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const btn = document.getElementById('saveStoreCfgBtn');
+  if (btn) btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;margin:0;"></span>';
+  try {
+    await setDoc(doc(db, 'tiendas', userData.uid), {
+      nombre,
+      descripcion: document.getElementById('cfg-desc')?.value.trim()||'',
+      horario: document.getElementById('cfg-horario')?.value.trim()||'',
+      instagram: document.getElementById('cfg-ig')?.value.trim()||'',
+      whatsapp: document.getElementById('cfg-wa')?.value.trim()||'',
+      logoUrl: document.getElementById('cfg-logo')?.value.trim()||'',
+      bannerImages,
+      vendedorId: userData.uid,
+      vendedorNombre: userData.name,
+      activo: true,
+      fechaActualizacion: serverTimestamp(),
+    }, { merge: true });
+    showToast('Configuración guardada ✓');
+  } catch { showToast('Error al guardar configuración'); }
+  if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Guardar configuración';
+}
+
+// ══════════════════════════════════════════
+// ADMIN: DELETE STORE
+// ══════════════════════════════════════════
+async function adminDeleteStore(storeId) {
+  if (!confirm('¿Eliminar esta tienda y TODOS sus productos? Esto no se puede deshacer.')) return;
+  try {
+    const q = query(collection(db, 'productos_alianza'), where('vendedorId','==',storeId));
+    const snap = await getDocs(q);
+    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    await deleteDoc(doc(db, 'tiendas', storeId));
+    document.getElementById('storeModal').classList.remove('show');
+    showToast('Tienda eliminada');
+  } catch { showToast('Error al eliminar la tienda'); }
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// ══════════════════════════════════════════
+// GLOBAL EVENTS
+// ══════════════════════════════════════════
+document.getElementById('cartBtn').addEventListener('click', () => { renderCart(); document.getElementById('cartModal').classList.add('show'); });
+document.getElementById('cartClose').addEventListener('click', () => document.getElementById('cartModal').classList.remove('show'));
+document.getElementById('detailClose').addEventListener('click', () => document.getElementById('detailModal').classList.remove('show'));
+document.getElementById('storeModalClose').addEventListener('click', () => document.getElementById('storeModal').classList.remove('show'));
+document.getElementById('prodFormClose').addEventListener('click', () => document.getElementById('prodFormModal').classList.remove('show'));
+
+document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target===m) m.classList.remove('show'); }));
+
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+});
+document.getElementById('sidebarOverlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+});
+document.getElementById('sidebar').addEventListener('click', e => {
+  const item = e.target.closest('[data-page]');
+  if (item) goTo(item.dataset.page);
+});
+document.getElementById('bottomNavInner').addEventListener('click', e => {
+  const btn = e.target.closest('[data-page]');
+  if (btn) goTo(btn.dataset.page);
+});
+document.getElementById('globalSearch').addEventListener('input', e => {
+  if (currentPage === 'inicio') rerenderCurrentPage();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro | OMORA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./registro.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+  <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+  <meta name="theme-color" content="#5c3cfb">
+
+  <style>
+    /* ── ROLES ── */
+    .roles-label {
+      font-weight: 600;
+      color: #444;
+      margin: 14px 0 10px;
+      font-size: 14px;
+    }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .role-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 8px;
+      background: #f0f0f0;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .role-btn:hover {
+      background: #e0d9ff;
+      border-color: #5c3cfb;
+      color: #5c3cfb;
+    }
+    .role-btn.selected {
+      background: #5c3cfb;
+      border-color: #5c3cfb;
+      color: white;
+    }
+    .role-btn.selected .role-icon { filter: brightness(10); }
+    .role-btn-solo {
+      grid-column: 1 / -1;
+    }
+    .role-icon { font-size: 18px; }
+    .role-error {
+      color: #e53e3e;
+      font-size: 12px;
+      margin-top: -6px;
+      margin-bottom: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- FONDO CARRUSEL -->
+<div class="background">
+  <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1558788353-f76d92427f16');"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1517849845537-4d257902454a');"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a');"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1543852786-1cf6624b9987');"></div>
+  <div class="overlay"></div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="container">
+
+  <!-- TEXTO -->
+  <div class="hero">
+    <h1>ÚNETE A OMORA</h1>
+    <h3>Dale una segunda oportunidad a una vida</h3>
+    <p>
+      Regístrate y forma parte de una comunidad que cree en la adopción,
+      el respeto y el amor por los animales.
+    </p>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="login-card">
+    <h2>Crear cuenta</h2>
+
+    <form id="registerForm">
+      <input type="text"  id="username"  placeholder="Nombre de usuario"   required>
+      <input type="email" id="email"     placeholder="Correo electrónico"   required>
+      <input type="text"  id="fullName"  placeholder="Nombre completo">
+      <input type="tel"   id="phone"     placeholder="Teléfono">
+      <input type="text"  id="address"   placeholder="Dirección">
+      <input type="password" id="password"        placeholder="Contraseña"          required>
+      <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+      <input type="date"  id="birthDate">
+
+      <!-- ROLES -->
+      <p class="roles-label">Selecciona tu rol en Omora:</p>
+
+      <div class="roles-grid">
+        <div class="role-btn" data-rol="adoptante">
+          <span class="role-icon">🏠</span> Adoptar
+        </div>
+        <div class="role-btn" data-rol="protector">
+          <span class="role-icon">🛡️</span> Protector
+        </div>
+        <div class="role-btn" data-rol="refugio">
+          <span class="role-icon">🏥</span> Refugio
+        </div>
+        <div class="role-btn" data-rol="Alianza">
+          <span class="role-icon">🤝</span> Alianza
+        </div>
+        <div class="role-btn role-btn-solo" data-rol="fantasma">
+          <span class="role-icon">👻</span> Fantasma Omora (Visitador)
+        </div>
+      </div>
+      <p class="role-error" id="roleError">Por favor selecciona un rol.</p>
+
+      <!-- Campo oculto que guarda el rol seleccionado -->
+      <input type="hidden" id="rolSelected" value="">
+
+      <button type="submit" class="login-btn">Registrarse</button>
+    </form>
+
+    <div class="links">
+      <a href="./login.html">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="./registro.js"></script>
+
+<script>
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+  }
+</script>
+
+</body>
+</html>

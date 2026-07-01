@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguridad | Omora</title>
+
+  <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root{--violet:#6A5ACD;--orange:#FF9F43;--red:#E24B4A;--green:#3FAE6A;--bg:#F4F3FB;--surface:#fff;--border:#E8E6F5;--text:#18171F;--muted:#7B7995;--shadow:0 10px 30px rgba(106,90,205,.12);--radius:22px;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;}
+    .wrap{width:min(680px,100%);padding:26px 16px 120px;}
+    .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .back{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;}
+    .back i{color:var(--violet)}
+    .headerCard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px;margin-bottom:16px;}
+    .hTitle{font-size:22px;font-weight:900;}
+    .hSub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+
+    .card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px;}
+    .card h2{font-size:16px;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+    .card h2 i{color:var(--violet)}
+
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;}
+    .inputWrap{position:relative;display:flex;align-items:center;}
+    .inputWrap input{width:100%;padding:13px 42px 13px 14px;border-radius:14px;border:1.5px solid var(--border);background:var(--bg);font-size:14px;font-weight:600;color:var(--text);outline:none;transition:.15s;}
+    .inputWrap input:focus{border-color:var(--violet);background:var(--surface);}
+    .eyeBtn{position:absolute;right:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:4px;}
+    .eyeBtn:hover{color:var(--violet);}
+
+    .strengthBar{height:6px;border-radius:999px;background:var(--border);margin-top:8px;overflow:hidden;}
+    .strengthFill{height:100%;width:0%;border-radius:999px;background:var(--red);transition:.25s;}
+    .strengthLabel{font-size:11px;font-weight:800;color:var(--muted);margin-top:6px;}
+
+    .rules{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+    .rules li{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;}
+    .rules li i{width:14px;color:var(--border);}
+    .rules li.ok{color:var(--text);}
+    .rules li.ok i{color:var(--green);}
+
+    .errorMsg{font-size:12px;color:var(--red);font-weight:700;margin-top:6px;display:none;}
+    .errorMsg.show{display:block;}
+
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .row:last-child{border-bottom:none}
+    .rowLeft{display:flex;align-items:center;gap:10px;}
+    .muted{color:var(--muted);}
+
+    .switch{width:46px;height:28px;border-radius:999px;border:1.5px solid var(--border);background:rgba(123,121,149,.15);position:relative;cursor:pointer;flex-shrink:0;}
+    .switch::after{content:'';position:absolute;top:50%;transform:translateY(-50%);left:4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid var(--border);transition:.2s;}
+    .switch.on{background:rgba(106,90,205,.20);border-color:rgba(106,90,205,.35)}
+    .switch.on::after{left:22px;background:var(--violet)}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 14px;border-radius:16px;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);font-weight:900;width:100%;font-size:14px;}
+    .btnPrimary{background:var(--violet);border-color:rgba(0,0,0,0);color:white}
+    .btnPrimary:disabled{opacity:.5;cursor:not-allowed;}
+    .btnDanger{color:var(--red);border-color:rgba(226,75,74,.3);}
+
+    .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;}
+    .toast.show{opacity:1}
+    .toast.error{background:var(--red);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <button class="back" onclick="history.back()" type="button"><i class="fa-solid fa-arrow-left"></i>Volver</button>
+    </div>
+
+    <div class="headerCard">
+      <div class="hTitle"><i class="fa-solid fa-shield-halved" style="color:var(--violet); margin-right:10px"></i>Seguridad</div>
+      <div class="hSub">Administra tu contraseña y las opciones de seguridad de tu cuenta.</div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-key"></i> Cambiar contraseña</h2>
+
+      <form id="pwdForm" onsubmit="return false;">
+        <div class="field">
+          <label for="currentPwd">Contraseña actual</label>
+          <div class="inputWrap">
+            <input type="password" id="currentPwd" autocomplete="current-password" placeholder="Ingresa tu contraseña actual" />
+            <button type="button" class="eyeBtn" onclick="toggleVisibility('currentPwd', this)"><i class="fa-solid fa-eye"></i></button>
+          </div>
+          <div class="errorMsg" id="errCurrent">La contraseña actual es obligatoria</div>
+        </div>
+
+        <div class="field">
+          <label for="newPwd">Nueva contraseña</label>
+          <div class="inputWrap">
+            <input type="password" id="newPwd" autocomplete="new-password" placeholder="Crea una nueva contraseña" oninput="checkStrength()" />
+            <button type="button" class="eyeBtn" onclick="toggleVisibility('newPwd', this)"><i class="fa-solid fa-eye"></i></button>
+          </div>
+          <div class="strengthBar"><div class="strengthFill" id="strengthFill"></div></div>
+          <div class="strengthLabel" id="strengthLabel">Seguridad de la contraseña</div>
+          <ul class="rules" id="rules">
+            <li id="ruleLen"><i class="fa-solid fa-circle-check"></i> Mínimo 8 caracteres</li>
+            <li id="ruleUpper"><i class="fa-solid fa-circle-check"></i> Al menos una mayúscula</li>
+            <li id="ruleNumber"><i class="fa-solid fa-circle-check"></i> Al menos un número</li>
+            <li id="ruleSpecial"><i class="fa-solid fa-circle-check"></i> Al menos un carácter especial</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <label for="confirmPwd">Confirmar nueva contraseña</label>
+          <div class="inputWrap">
+            <input type="password" id="confirmPwd" autocomplete="new-password" placeholder="Repite la nueva contraseña" oninput="checkMatch()" />
+            <button type="button" class="eyeBtn" onclick="toggleVisibility('confirmPwd', this)"><i class="fa-solid fa-eye"></i></button>
+          </div>
+          <div class="errorMsg" id="errMatch">Las contraseñas no coinciden</div>
+        </div>
+
+        <button class="btn btnPrimary" id="submitBtn" onclick="cambiarContrasena()" type="button" disabled>
+          <i class="fa-solid fa-floppy-disk"></i> Actualizar contraseña
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-lock"></i> Opciones adicionales</h2>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-mobile-screen" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Verificación en dos pasos</div>
+            <div class="muted" style="font-size:12px">Añade una capa extra de seguridad al iniciar sesión</div>
+          </div>
+        </div>
+        <div class="switch" data-key="dosFactores" onclick="this.classList.toggle('on')"></div>
+      </div>
+
+      <div class="row">
+        <div class="rowLeft">
+          <i class="fa-solid fa-bell" style="color:var(--violet);"></i>
+          <div>
+            <div style="font-weight:900;font-size:13px">Alertas de inicio de sesión</div>
+            <div class="muted" style="font-size:12px">Notificación por correo cuando inicies sesión desde un nuevo dispositivo</div>
+          </div>
+        </div>
+        <div class="switch on" data-key="alertasLogin" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--red);"></i> Zona de riesgo</h2>
+      <button class="btn btnDanger" onclick="cerrarSesiones()" type="button">
+        <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión en todos los dispositivos
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Contraseña actualizada</div>
+
+  <script>
+    // ------- Firebase Auth (referencia) -------
+    // import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword }
+    //   from "firebase/auth";
+    //
+    // async function actualizarContrasenaReal(actual, nueva) {
+    //   const auth = getAuth();
+    //   const user = auth.currentUser;
+    //   const cred = EmailAuthProvider.credential(user.email, actual);
+    //   await reauthenticateWithCredential(user, cred); // valida la contraseña actual
+    //   await updatePassword(user, nueva);              // aplica la nueva
+    // }
+
+    function toggleVisibility(id, btn){
+      const input = document.getElementById(id);
+      const icon = btn.querySelector('i');
+      if(input.type === 'password'){
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function checkStrength(){
+      const val = document.getElementById('newPwd').value;
+      const hasLen = val.length >= 8;
+      const hasUpper = /[A-Z]/.test(val);
+      const hasNumber = /[0-9]/.test(val);
+      const hasSpecial = /[^A-Za-z0-9]/.test(val);
+
+      setRule('ruleLen', hasLen);
+      setRule('ruleUpper', hasUpper);
+      setRule('ruleNumber', hasNumber);
+      setRule('ruleSpecial', hasSpecial);
+
+      const score = [hasLen, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+      const fill = document.getElementById('strengthFill');
+      const label = document.getElementById('strengthLabel');
+      const pct = (score / 4) * 100;
+      fill.style.width = pct + '%';
+
+      const colors = ['#E24B4A', '#E24B4A', '#FF9F43', '#FF9F43', '#3FAE6A'];
+      const labels = ['Muy débil', 'Muy débil', 'Regular', 'Buena', 'Fuerte'];
+      fill.style.background = colors[score];
+      label.textContent = val.length === 0 ? 'Seguridad de la contraseña' : labels[score];
+
+      checkMatch();
+      updateSubmitState();
+    }
+
+    function setRule(id, ok){
+      const li = document.getElementById(id);
+      li.classList.toggle('ok', ok);
+    }
+
+    function checkMatch(){
+      const newPwd = document.getElementById('newPwd').value;
+      const confirmPwd = document.getElementById('confirmPwd').value;
+      const err = document.getElementById('errMatch');
+      const mismatch = confirmPwd.length > 0 && newPwd !== confirmPwd;
+      err.classList.toggle('show', mismatch);
+      updateSubmitState();
+    }
+
+    function updateSubmitState(){
+      const current = document.getElementById('currentPwd').value;
+      const newPwd = document.getElementById('newPwd').value;
+      const confirmPwd = document.getElementById('confirmPwd').value;
+      const strongEnough = newPwd.length >= 8 && /[A-Z]/.test(newPwd) && /[0-9]/.test(newPwd) && /[^A-Za-z0-9]/.test(newPwd);
+      const matches = newPwd === confirmPwd && confirmPwd.length > 0;
+      document.getElementById('submitBtn').disabled = !(current.length > 0 && strongEnough && matches);
+    }
+
+    document.getElementById('currentPwd').addEventListener('input', updateSubmitState);
+
+    function showToast(msg, isError){
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.toggle('error', !!isError);
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    async function cambiarContrasena(){
+      const current = document.getElementById('currentPwd').value;
+      const newPwd = document.getElementById('newPwd').value;
+
+      // Demo: aquí llamarías a tu función real de Firebase Auth
+      // try {
+      //   await actualizarContrasenaReal(current, newPwd);
+      //   showToast('Contraseña actualizada');
+      // } catch (e) {
+      //   showToast('No se pudo actualizar: revisa tu contraseña actual', true);
+      // }
+
+      console.log('Cambio de contraseña solicitado (demo). Actual:', current ? '••••••' : '(vacío)', 'Nueva longitud:', newPwd.length);
+      showToast('Contraseña actualizada');
+
+      document.getElementById('pwdForm').reset();
+      checkStrength();
+    }
+
+    function cerrarSesiones(){
+      // Demo: aquí invalidarías tokens de sesión en tu backend / Firebase
+      showToast('Sesiones cerradas en todos los dispositivos');
+    }
+  </script>
+</body>
+</html>

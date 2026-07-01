@@ -1,0 +1,104 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+}
+
+.topbar {
+  height: 60px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-weight: bold;
+  color: #4301dd;
+}
+
+.user-status {
+  color: green;
+  font-weight: 600;
+}
+
+.dm-container {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.dm-sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 15px;
+}
+
+.dm-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.dm-user.active,
+.dm-user:hover {
+  background: #f5f5ff;
+}
+
+.dm-user img {
+  width: 40px;
+  border-radius: 50%;
+}
+
+.dm-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: 15px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 65%;
+  padding: 12px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.sent {
+  background: #4301dd;
+  color: white;
+  margin-left: auto;
+}
+
+.received {
+  background: white;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background: white;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}

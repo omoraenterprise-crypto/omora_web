@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Favoritos | Omora</title>
+
+  <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../imagenes/Omora Madrid.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../imagenes/Omora Madrid.png">
+    <link rel="apple-touch-icon" href="../imagenes/Omora Madrid.png">
+    <meta name="theme-color" content="#5c3cfb">
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root{--violet:#6A5ACD;--bg:#F4F3FB;--surface:#fff;--border:#E8E6F5;--text:#18171F;--muted:#7B7995;--shadow:0 10px 30px rgba(106,90,205,.12);--radius:22px;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;}
+    .wrap{width:min(980px,100%);padding:26px 16px 120px;}
+    .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .back{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;}
+    .back i{color:var(--violet)}
+    .headerCard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px;margin-bottom:16px;}
+    .hTitle{font-size:22px;font-weight:900;}
+    .hSub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+    .card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;}
+    .rowLeft{display:flex;align-items:center;gap:10px;}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(106,90,205,.10);color:var(--violet);font-weight:800;font-size:12px;border:1px solid rgba(106,90,205,.20)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:16px;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);font-weight:900;}
+    .btnDanger{background:rgba(226,75,74,.08);border-color:rgba(226,75,74,.25);color:#E24B4A}
+    .list{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
+    .favItem{display:flex;gap:12px;align-items:center;border:1px solid var(--border);background:var(--bg);border-radius:18px;padding:10px;}
+    .favItem img{width:52px;height:52px;border-radius:14px;object-fit:cover;background:#fff;}
+    .favMeta{flex:1;min-width:0;}
+    .favName{font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .favPrice{margin-top:4px;color:var(--violet);font-weight:900;font-size:13px;}
+    .empty{margin-top:14px;color:var(--muted);display:none;}
+    .empty i{font-size:48px;color:var(--border);margin-bottom:10px;display:block}
+    .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <button class="back" onclick="history.back()" type="button"><i class="fa-solid fa-arrow-left"></i>Volver</button>
+    </div>
+
+    <div class="headerCard">
+      <div class="hTitle"><i class="fa-regular fa-heart" style="color:var(--violet); margin-right:10px"></i>Mis Favoritos</div>
+      <div class="hSub">Lista de favoritos guardados en Firestore (según tu usuario).</div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div class="rowLeft">
+          <span class="pill"><i class="fa-solid fa-heart"></i><span id="favCount">0</span> guardados</span>
+        </div>
+        <button class="btn btnDanger" type="button" id="clearFavsBtn"><i class="fa-solid fa-trash"></i>Limpiar</button>
+      </div>
+
+      <div id="favList" class="list"></div>
+      <div class="empty" id="favEmpty" style="text-align:center;">
+        <i class="fa-regular fa-heart"></i>
+        <div>Sin favoritos todavía.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, collection, onSnapshot,
+      deleteDoc, serverTimestamp, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtGVfaEKbVXWCvTvA3t_XRZ6PK28pL5rc",
+      authDomain: "omora-55e66.firebaseapp.com",
+      projectId: "omora-55e66",
+      storageBucket: "omora-55e66.firebasestorage.app",
+      messagingSenderId: "860384804554",
+      appId: "1:860384804554:web:d59b9e0732619814d1be33"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const $ = (id)=>document.getElementById(id);
+    const toast = (msg)=>{
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), 2200);
+    };
+
+    const state = { uid:null, favorites:[] };
+    let unsubFavs = null;
+
+    function renderFavs(){
+      $('favCount').textContent = String(state.favorites.length);
+      const list = $('favList');
+      list.innerHTML = '';
+
+      $('favEmpty').style.display = state.favorites.length ? 'none' : 'block';
+
+      state.favorites.forEach(f=>{
+        const item = document.createElement('div');
+        item.className = 'favItem';
+        item.innerHTML = `
+          <img src="${f.image || 'https://via.placeholder.com/80'}" alt="${f.name || 'Producto'}" />
+          <div class="favMeta">
+            <div class="favName">${f.name || 'Sin nombre'}</div>
+            <div class="favPrice">${f.price ? '$'+Number(f.price).toLocaleString('es-CO') : ''}</div>
+          </div>
+          <button class="btn" style="padding:10px 12px" type="button" data-remove="${f.id}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+
+        item.querySelector('[data-remove]').addEventListener('click', async ()=>{
+          if(!state.uid) return;
+          try {
+            await deleteDoc(doc(db, 'usuarios', state.uid, 'favoritos', f.id));
+            toast('Eliminado de favoritos');
+          } catch {
+            toast('Error al eliminar favorito');
+          }
+        });
+
+        list.appendChild(item);
+      });
+    }
+
+    function subscribeFavs(){
+      if(!state.uid) return;
+      if(unsubFavs) unsubFavs();
+
+      const favCol = collection(db, 'usuarios', state.uid, 'favoritos');
+      unsubFavs = onSnapshot(favCol, (snap)=>{
+        state.favorites = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+        renderFavs();
+      }, ()=>{
+        toast('No se pudieron cargar favoritos');
+      });
+    }
+
+    $('clearFavsBtn').addEventListener('click', async ()=>{
+      if(!state.uid) return;
+      if(!confirm('¿Eliminar todos los favoritos?')) return;
+      try {
+        const favCol = collection(db, 'usuarios', state.uid, 'favoritos');
+        const snap = await getDocs(favCol);
+        await Promise.all(snap.docs.map(d=>deleteDoc(d.ref)));
+        toast('Favoritos limpiados');
+      } catch {
+        toast('Error al limpiar favoritos');
+      }
+    });
+
+    onAuthStateChanged(auth, (user)=>{
+      if(!user){
+        window.location.href = '../Login/login.html';
+        return;
+      }
+      state.uid = user.uid;
+      subscribeFavs();
+    });
+  </script>
+</body>
+</html>
+

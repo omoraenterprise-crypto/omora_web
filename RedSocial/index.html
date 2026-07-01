@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Instagram DM Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="header">
+      <h2>danx_fer02</h2>
+    </div>
+
+    <input
+      type="text"
+      id="searchInput"
+      class="search"
+      placeholder="Buscar"
+      onkeyup="searchChats()"
+    >
+
+    <div class="chat-list" id="chatList">
+      <div class="chat" onclick="openChat('dave')">
+        <img src="https://i.pravatar.cc/40?img=12">
+        <div>
+          <strong>Dave 🔥</strong>
+          <p>Salgo de la playa…</p>
+        </div>
+      </div>
+
+      <div class="chat" onclick="openChat('biker')">
+        <img src="https://i.pravatar.cc/40?img=32">
+        <div>
+          <strong>Biker’s Zone</strong>
+          <p>Archivo adjunto</p>
+        </div>
+      </div>
+
+      <div class="chat" onclick="openChat('eileen')">
+        <img src="https://i.pravatar.cc/40?img=45">
+        <div>
+          <strong>Eileen</strong>
+          <p>Mensaje de voz</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <main class="chat-window hidden" id="chatWindow">
+    <div class="chat-header">
+      <button class="back" onclick="goBack()">←</button>
+      <img id="chatAvatar">
+      <span id="chatName"></span>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="input-area">
+      <label class="icon-btn">
+        📷
+        <input type="file" accept="image/*" hidden onchange="sendImage(event)">
+      </label>
+
+      <label class="icon-btn">
+        🎤
+        <input type="file" accept="audio/*" hidden onchange="sendAudio(event)">
+      </label>
+
+      <input type="text" id="messageInput" placeholder="Enviar mensaje...">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </main>
+
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>

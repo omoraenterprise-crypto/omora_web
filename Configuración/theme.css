@@ -1,0 +1,8 @@
+[data-font="small"] { font-size: 14px; }
+[data-font="medium"] { font-size: 16px; }
+[data-font="large"] { font-size: 18px; }
+
+.no-animations * {
+  transition: none !important;
+  animation: none !important;
+}

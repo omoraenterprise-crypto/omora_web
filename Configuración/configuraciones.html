@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuraciones | OMORA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- GLOBAL -->
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+
+  <!-- PAGE -->
+  <link rel="stylesheet" href="./configuraciones.css">
+</head>
+<body>
+
+<div class="settings-container">
+
+  <header class="settings-header">
+    <h1>⚙️ Configuraciones</h1>
+    <p>Personaliza tu experiencia en OMORA</p>
+  </header>
+
+  <!-- APARIENCIA -->
+  <section class="setting-card">
+    <h2>🎨 Apariencia</h2>
+
+    <div class="setting-row">
+      <span>Modo oscuro</span>
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span>Animaciones</span>
+      <label class="switch">
+        <input type="checkbox" id="animationsToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- TEXTO -->
+  <section class="setting-card">
+    <h2>🔠 Texto</h2>
+
+    <label class="setting-label">
+      Tamaño de letra
+      <select id="fontSize">
+        <option value="small">Pequeño</option>
+        <option value="medium" selected>Mediano</option>
+        <option value="large">Grande</option>
+      </select>
+    </label>
+  </section>
+
+  <!-- NOTIFICACIONES -->
+  <section class="setting-card">
+    <h2>🔔 Notificaciones</h2>
+
+    <div class="setting-row">
+      <span>Correos de OMORA</span>
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span>Adopciones cercanas</span>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- PRIVACIDAD -->
+  <section class="setting-card">
+    <h2>🔒 Privacidad</h2>
+
+    <div class="setting-row">
+      <span>Perfil público</span>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <p class="hint">
+      Si lo desactivas, solo fundaciones podrán ver tu perfil.
+    </p>
+  </section>
+
+  <!-- CUENTA -->
+  <section class="setting-card danger-zone">
+    <h2>👤 Cuenta</h2>
+    <button class="btn secondary">Cambiar contraseña</button>
+    <button class="btn danger">Cerrar sesión</button>
+  </section>
+
+</div>
+
+<script src="../assets/js/theme.js"></script>
+<script src="./configuraciones.js"></script>
+</body>
+</html>
