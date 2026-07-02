@@ -16,6 +16,273 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/Inicio/inicio.css">
+
+    <!-- Estilos para la sección del Collar GPS y galería de videos.
+         Podés mover este bloque a inicio.css si preferís tenerlo todo junto. -->
+    <style>
+        .text-left { text-align: left; }
+
+        .collar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .collar-imagen { position: relative; }
+
+        .collar-carousel {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            background: #eee;
+        }
+
+        .collar-carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .collar-carousel-track img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .collar-carousel-track img.active {
+            opacity: 1;
+        }
+
+        .collar-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.85);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5c3cfb;
+            font-size: 1rem;
+            transition: 0.2s;
+            z-index: 2;
+        }
+
+        .collar-carousel-btn:hover {
+            background: #5c3cfb;
+            color: #fff;
+        }
+
+        .collar-carousel-btn.prev { left: 12px; }
+        .collar-carousel-btn.next { right: 12px; }
+
+        .collar-carousel-dots {
+            position: absolute;
+            bottom: 14px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .collar-carousel-dots .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            transition: 0.2s;
+        }
+
+        .collar-carousel-dots .dot.active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+
+        .collar-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: #5c3cfb;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+        }
+
+        .collar-features {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .collar-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .collar-features i {
+            color: #5c3cfb;
+            width: 20px;
+            text-align: center;
+        }
+
+        .collar-btns {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            padding: 0.8rem 1.8rem;
+            border: 2px solid #5c3cfb;
+            color: #5c3cfb;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .btn-outline:hover {
+            background: #5c3cfb;
+            color: #fff;
+        }
+
+        .video-carousel-wrap {
+            max-width: 780px;
+            margin: 2.5rem auto 0;
+        }
+
+        .video-carousel {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            background: #000;
+        }
+
+        .video-carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-carousel-track video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-carousel-track video.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 1;
+        }
+
+        .video-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.85);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5c3cfb;
+            font-size: 1rem;
+            transition: 0.2s;
+            z-index: 3;
+        }
+
+        .video-carousel-btn:hover {
+            background: #5c3cfb;
+            color: #fff;
+        }
+
+        .video-carousel-btn.prev { left: 12px; }
+        .video-carousel-btn.next { right: 12px; }
+
+        .video-carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .video-carousel-dots .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #d8d3fb;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            transition: 0.2s;
+        }
+
+        .video-carousel-dots .dot.active {
+            background: #5c3cfb;
+            transform: scale(1.3);
+        }
+
+        .video-caption {
+            text-align: center;
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
+            margin: 0.9rem 0 0;
+        }
+
+        @media (max-width: 768px) {
+            .collar-grid {
+                grid-template-columns: 1fr;
+            }
+            .text-left {
+                text-align: center;
+            }
+            .collar-btns {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -29,6 +296,7 @@
                 <a href="#inicio">Inicio</a>
                 <a href="#sobre-nosotros">Sobre nosotros</a>
                 <a href="#por-que-adoptar">¿Por qué adoptar?</a>
+                <a href="#collar">Collar GPS</a>
                 <a href="#contacto">Contáctanos</a>
                 <a href="/Inicio/Descargar.html">Descargar</a>
             </nav>
@@ -124,6 +392,88 @@
             </div>
         </section>
 
+        <section class="section" id="collar">
+            <div class="container">
+                <div class="collar-grid">
+
+                    <div class="collar-imagen">
+                        <!--
+                            CÓMO USAR TUS PROPIAS FOTOS EN EL CARRUSEL:
+                            1. Creá una carpeta /imagenes/collar en tu repo y subí ahí todas las fotos.
+                            2. Bajá hasta el <script> al final de la página, buscá el comentario
+                               "LISTA DE IMÁGENES DEL CARRUSEL DEL COLLAR" y agregá/cambiá los
+                               nombres de archivo en el array "imagenesCollar".
+                            3. No hace falta tocar nada más acá arriba, el carrusel se arma solo.
+                        -->
+                        <div class="collar-carousel" id="collarCarousel">
+                            <div class="collar-carousel-track" id="collarCarouselTrack"></div>
+
+                            <button class="collar-carousel-btn prev" id="collarPrev" aria-label="Imagen anterior">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="collar-carousel-btn next" id="collarNext" aria-label="Imagen siguiente">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+
+                            <div class="collar-carousel-dots" id="collarDots"></div>
+                        </div>
+                        <div class="collar-badge">Nuevo</div>
+                    </div>
+
+                    <div class="collar-info">
+                        <h2 class="main-title text-left">Collar GPS OMORA</h2>
+                        <p class="main-desc text-left">Ubicación en tiempo real, alertas de zona segura y batería de larga duración. Cuida a tu mejor amigo estés donde estés.</p>
+
+                        <ul class="collar-features">
+                            <li><i class="fas fa-satellite-dish"></i> Ubicación en tiempo real vía app</li>
+                            <li><i class="fas fa-shield-alt"></i> Alerta si sale de la zona segura</li>
+                            <li><i class="fas fa-battery-full"></i> Hasta 7 días de batería</li>
+                            <li><i class="fas fa-tint"></i> Resistente al agua</li>
+                            <li><i class="fas fa-ruler"></i> Ajustable, para todas las razas</li>
+                        </ul>
+
+                        <div class="collar-btns">
+                            <a href="#contacto" class="btn-solid">Quiero uno</a>
+                            <a href="#collar-videos" class="btn-outline">Ver en acción</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section pt-0" id="collar-videos">
+            <div class="container text-center">
+                <h2 class="main-title">El collar en acción</h2>
+                <p class="main-desc">Mirá cómo funciona el collar GPS OMORA en la vida real.</p>
+
+                <!--
+                    CÓMO AGREGAR/CAMBIAR VIDEOS LOCALES:
+                    Este carrusel se genera automáticamente con JavaScript.
+                    Bajá hasta el <script> al final de la página, buscá el comentario
+                    "LISTA DE VIDEOS DE LA GALERÍA" y editá el array "videosCollar":
+                      - src: ruta del archivo de video dentro de tu carpeta (ej: "../videos/config.mp4")
+                      - caption: el texto que aparece debajo del video
+                      - poster (opcional): imagen de portada mientras no se reproduce
+                -->
+                <div class="video-carousel-wrap">
+                    <div class="video-carousel" id="videoCarousel">
+                        <div class="video-carousel-track" id="videoCarouselTrack"></div>
+
+                        <button class="video-carousel-btn prev" id="videoPrev" aria-label="Video anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="video-carousel-btn next" id="videoNext" aria-label="Video siguiente">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="video-carousel-dots" id="videoDots"></div>
+                    <p class="video-caption" id="videoCaption"></p>
+                </div>
+            </div>
+        </section>
+
         <section class="section-dark" id="contacto">
             <div class="container">
                 <div class="contact-grid">
@@ -184,5 +534,219 @@
     </footer>
 
     <script src="/Inicio/inicio.js"></script>
+
+    <script>
+        // ============================================
+        // LISTA DE IMÁGENES DEL CARRUSEL DEL COLLAR
+        // Agregá o quitá nombres de archivo acá abajo.
+        // Deben estar subidos en /imagenes/collar/
+        // Respetá mayúsculas/minúsculas exactas del nombre del archivo.
+        // ============================================
+        const imagenesCollar = [
+            "../photos/caja.jpeg",
+            "../photos/bolsas.jpeg",
+            "../photos/llavero.jpeg",
+            "../photos/omora.jpeg"
+        ];
+
+        (function () {
+            const track = document.getElementById('collarCarouselTrack');
+            const dotsWrap = document.getElementById('collarDots');
+            const btnPrev = document.getElementById('collarPrev');
+            const btnNext = document.getElementById('collarNext');
+
+            if (!track || imagenesCollar.length === 0) return;
+
+            let current = 0;
+            let autoplayTimer = null;
+
+            // Crea las imágenes
+            imagenesCollar.forEach((src, i) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Collar GPS OMORA ' + (i + 1);
+                if (i === 0) img.classList.add('active');
+                track.appendChild(img);
+            });
+
+            // Crea los puntos
+            imagenesCollar.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', 'Ir a imagen ' + (i + 1));
+                dot.addEventListener('click', () => goTo(i));
+                dotsWrap.appendChild(dot);
+            });
+
+            const slides = track.querySelectorAll('img');
+            const dots = dotsWrap.querySelectorAll('.dot');
+
+            function goTo(index) {
+                slides[current].classList.remove('active');
+                dots[current].classList.remove('active');
+                current = (index + slides.length) % slides.length;
+                slides[current].classList.add('active');
+                dots[current].classList.add('active');
+                resetAutoplay();
+            }
+
+            function next() { goTo(current + 1); }
+            function prev() { goTo(current - 1); }
+
+            function resetAutoplay() {
+                clearInterval(autoplayTimer);
+                autoplayTimer = setInterval(next, 4000);
+            }
+
+            btnNext.addEventListener('click', next);
+            btnPrev.addEventListener('click', prev);
+
+            if (slides.length > 1) {
+                resetAutoplay();
+            } else {
+                btnPrev.style.display = 'none';
+                btnNext.style.display = 'none';
+                dotsWrap.style.display = 'none';
+            }
+        })();
+
+        // ============================================
+        // LISTA DE VIDEOS DE LA GALERÍA "El collar en acción"
+        // Agregá, quitá o cambiá videos acá abajo.
+        // Los archivos deben estar subidos, por ejemplo,
+        // en una carpeta /videos/ dentro de tu proyecto.
+        // Respetá mayúsculas/minúsculas exactas del nombre del archivo.
+        // "poster" es opcional: una imagen que se ve antes de darle play.
+        // ============================================
+        const videosCollar = [
+            {
+                src: "../photos/video1.mp4",
+                caption: "Configuración inicial del collar",
+                poster: ""
+            },
+            {
+                src: "../photos/video2.mp4",
+                caption: "Seguimiento en tiempo real",
+                poster: ""
+            },
+            {
+                src: "../photos/video3.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video4.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video6.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video7.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video8.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video9.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video10.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video11.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video12.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            },
+            {
+                src: "../photos/video13.mp4",
+                caption: "Alerta de zona segura",
+                poster: ""
+            }
+        ];
+
+        (function () {
+            const track = document.getElementById('videoCarouselTrack');
+            const dotsWrap = document.getElementById('videoDots');
+            const captionEl = document.getElementById('videoCaption');
+            const btnPrev = document.getElementById('videoPrev');
+            const btnNext = document.getElementById('videoNext');
+
+            if (!track || videosCollar.length === 0) return;
+
+            let current = 0;
+
+            // Crea los videos
+            videosCollar.forEach((v, i) => {
+                const video = document.createElement('video');
+                video.src = v.src;
+                if (v.poster) video.poster = v.poster;
+                video.controls = true;
+                video.preload = 'metadata';
+                video.playsInline = true;
+                if (i === 0) video.classList.add('active');
+                track.appendChild(video);
+            });
+
+            // Crea los puntos (solo si hay más de un video)
+            if (videosCollar.length > 1) {
+                videosCollar.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Ir a video ' + (i + 1));
+                    dot.addEventListener('click', () => goTo(i));
+                    dotsWrap.appendChild(dot);
+                });
+            } else {
+                btnPrev.style.display = 'none';
+                btnNext.style.display = 'none';
+            }
+
+            const videos = track.querySelectorAll('video');
+            const dots = dotsWrap.querySelectorAll('.dot');
+
+            function updateCaption() {
+                if (captionEl) {
+                    captionEl.textContent = videosCollar[current].caption || '';
+                }
+            }
+
+            function goTo(index) {
+                videos[current].pause();
+                videos[current].classList.remove('active');
+                if (dots[current]) dots[current].classList.remove('active');
+
+                current = (index + videos.length) % videos.length;
+
+                videos[current].classList.add('active');
+                if (dots[current]) dots[current].classList.add('active');
+                updateCaption();
+            }
+
+            function next() { goTo(current + 1); }
+            function prev() { goTo(current - 1); }
+
+            btnNext.addEventListener('click', next);
+            btnPrev.addEventListener('click', prev);
+
+            updateCaption();
+        })();
+    </script>
 </body>
 </html>
