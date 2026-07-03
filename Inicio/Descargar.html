@@ -13,16 +13,25 @@
   <!-- HEADER -->
   <header class="header">
     <div class="logo">OM<span>ORA</span></div>
-    <nav class="nav">
+
+    <nav class="nav" id="navMenu">
       <a href="#">Inicio</a>
       <a href="#">Nosotros</a>
       <a href="#">Descargar</a>
       <a href="#">Contacto</a>
     </nav>
+
     <div class="header-actions">
       <a href="#" class="btn-login">Iniciar sesión</a>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
+
+  <div class="nav-overlay" id="navOverlay"></div>
 
   <!-- HERO DESCARGA -->
   <section class="descarga-hero">
@@ -58,6 +67,65 @@
   <footer class="footer">
     © 2026 OMORA. Todos los derechos reservados.
   </footer>
+
+  <script>
+    // ============================================
+    // MENÚ HAMBURGUESA (móvil / tablet)
+    // Mueve el <nav> directamente al <body> cuando se abre,
+    // así queda garantizado por encima de todo, sin depender
+    // de ningún z-index heredado del header.
+    // ============================================
+    (function () {
+      const hamburger = document.getElementById('hamburgerBtn');
+      const navMenu = document.getElementById('navMenu');
+      const overlay = document.getElementById('navOverlay');
+
+      if (!hamburger || !navMenu || !overlay) return;
+
+      const navParentOriginal = navMenu.parentNode;
+      const navNextSiblingOriginal = navMenu.nextSibling;
+
+      function abrirMenu() {
+        document.body.appendChild(overlay);
+        document.body.appendChild(navMenu);
+
+        hamburger.classList.add('active');
+        navMenu.classList.add('active');
+        overlay.classList.add('active');
+        hamburger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function cerrarMenu() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+
+        if (navNextSiblingOriginal) {
+          navParentOriginal.insertBefore(navMenu, navNextSiblingOriginal);
+        } else {
+          navParentOriginal.appendChild(navMenu);
+        }
+      }
+
+      hamburger.addEventListener('click', () => {
+        const estaAbierto = navMenu.classList.contains('active');
+        estaAbierto ? cerrarMenu() : abrirMenu();
+      });
+
+      overlay.addEventListener('click', cerrarMenu);
+
+      navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', cerrarMenu);
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) cerrarMenu();
+      });
+    })();
+  </script>
 
 </body>
 </html>
