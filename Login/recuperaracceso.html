@@ -1,55 +1,293 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBtGVfaEKbVXWCvTvA3t_XRZ6PK28pL5rc",
-  authDomain: "omora-55e66.firebaseapp.com",
-  projectId: "omora-55e66",
-  storageBucket: "omora-55e66.firebasestorage.app",
-  messagingSenderId: "860384804554",
-  appId: "1:860384804554:web:d59b9e0732619814d1be33"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// --- CARRUSEL ---
-const slides = document.querySelectorAll('.slide');
-let index = 0;
-setInterval(() => {
-  if (slides.length > 0) {
-    slides[index].classList.remove('active');
-    index = (index + 1) % slides.length;
-    slides[index].classList.add('active');
-  }
-}, 5000);
-
-// --- RECUPERACIÓN ---
-const recoverForm = document.getElementById('recoverForm');
-const recoverEmail = document.getElementById('recoverEmail');
-const recoverHint = document.getElementById('recoverHint');
-
-if (recoverForm) {
-  recoverForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!recoverEmail) return;
-
-    const email = recoverEmail.value.trim();
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-
-      if (recoverHint) {
-        recoverHint.style.display = 'block';
-        recoverHint.textContent = 'Si el correo existe, recibirás instrucciones en unos minutos 🐾';
-      } else {
-        alert('Si el correo existe, recibirás instrucciones en unos minutos 🐾');
-      }
-
-      recoverForm.reset();
-    } catch (error) {
-      const msg = error?.message ? String(error.message) : String(error);
-      alert('Error: ' + msg);
-    }
-  });
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recuperar contraseña</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
+
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== FONDO CARRUSEL ===== */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+/* ===== CONTENEDOR ===== */
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 5%;
+  color: white;
+}
+
+/* ===== TEXTO HERO ===== */
+.hero {
+  max-width: 45%;
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.hero h3 {
+  font-weight: 400;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* ===== TARJETA ===== */
+.login-card {
+  width: 380px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ===== INPUTS ===== */
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* ===== HINT ===== */
+.hint {
+  display: none;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* ===== BOTÓN ===== */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6805b9;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background: #6805b9;
+}
+
+/* ===== LINKS ===== */
+.links {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.links a {
+  color: #fff;
+  font-size: 0.9rem;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero {
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 360px;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- ===== FONDO CARRUSEL ===== -->
+  <div class="background">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1558788353-f76d92427f16');"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1517849845537-4d257902454a');"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a');"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1543852786-1cf6624b9987');"></div>
+    <div class="overlay"></div>
+  </div>
+
+  <!-- ===== CONTENEDOR ===== -->
+  <div class="container">
+
+    <!-- TEXTO HERO -->
+    <div class="hero">
+      <h1>RECUPERA TU ACCESO</h1>
+      <h3>No te preocupes, pasa a cualquiera</h3>
+      <p>
+        Ingresa el correo asociado a tu cuenta.
+        Te enviaremos instrucciones para recuperar tu acceso.
+      </p>
+    </div>
+
+    <!-- TARJETA -->
+    <div class="login-card">
+      <h2>¿Olvidaste tus datos?</h2>
+
+      <div id="recoverHint" class="hint"></div>
+
+      <form id="recoverForm">
+        <input
+          type="email"
+          id="recoverEmail"
+          placeholder="Correo electrónico"
+          autocomplete="email"
+          required
+        >
+
+        <button type="submit" class="login-btn">Enviar instrucciones</button>
+      </form>
+
+      <div class="links">
+        <a href="login.html">Volver a iniciar sesión</a><br>
+        <a href="registro.html">Crear una cuenta</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtGVfaEKbVXWCvTvA3t_XRZ6PK28pL5rc",
+      authDomain: "omora-55e66.firebaseapp.com",
+      projectId: "omora-55e66",
+      storageBucket: "omora-55e66.firebasestorage.app",
+      messagingSenderId: "860384804554",
+      appId: "1:860384804554:web:d59b9e0732619814d1be33"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // --- CARRUSEL ---
+    const slides = document.querySelectorAll('.slide');
+    let index = 0;
+    setInterval(() => {
+      if (slides.length > 0) {
+        slides[index].classList.remove('active');
+        index = (index + 1) % slides.length;
+        slides[index].classList.add('active');
+      }
+    }, 5000);
+
+    // --- RECUPERACIÓN ---
+    const recoverForm = document.getElementById('recoverForm');
+    const recoverEmail = document.getElementById('recoverEmail');
+    const recoverHint = document.getElementById('recoverHint');
+
+    if (recoverForm) {
+      recoverForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!recoverEmail) return;
+
+        const email = recoverEmail.value.trim();
+        if (!email) {
+          alert('Ingrese su correo');
+          return;
+        }
+
+        try {
+          await sendPasswordResetEmail(auth, email);
+
+          if (recoverHint) {
+            recoverHint.style.display = 'block';
+            recoverHint.textContent = 'Si el correo existe, recibirás instrucciones en unos minutos 🐾';
+          } else {
+            alert('Si el correo existe, recibirás instrucciones en unos minutos 🐾');
+          }
+
+          recoverForm.reset();
+        } catch (error) {
+          console.log("ERROR:", error);
+          const msg = error?.message ? String(error.message) : String(error);
+          alert('No se pudo enviar el correo: ' + msg);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
