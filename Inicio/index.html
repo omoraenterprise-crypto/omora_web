@@ -545,6 +545,10 @@
     <script>
         // ============================================
         // MENÚ HAMBURGUESA (móvil / tablet)
+        // Se mueve el <nav> directamente al <body> cuando se abre,
+        // así queda 100% garantizado que no hay ningún elemento
+        // (headers, overlays, contenedores con z-index raros) que
+        // pueda taparlo o bloquear los clics.
         // ============================================
         (function () {
             const hamburger = document.getElementById('hamburgerBtn');
@@ -553,7 +557,17 @@
 
             if (!hamburger || !navMenu || !overlay) return;
 
+            // Guardamos dónde vive el nav originalmente para poder
+            // devolverlo a su lugar en pantallas grandes (desktop).
+            const navParentOriginal = navMenu.parentNode;
+            const navNextSiblingOriginal = navMenu.nextSibling;
+
             function abrirMenu() {
+                // Movemos el nav al final del body: queda por encima
+                // de absolutamente todo, sin depender del z-index del header.
+                document.body.appendChild(overlay);
+                document.body.appendChild(navMenu);
+
                 hamburger.classList.add('active');
                 navMenu.classList.add('active');
                 overlay.classList.add('active');
@@ -567,6 +581,14 @@
                 overlay.classList.remove('active');
                 hamburger.setAttribute('aria-expanded', 'false');
                 document.body.style.overflow = '';
+
+                // Devolvemos el nav a su lugar original dentro del header
+                // (solo importa para el layout de escritorio).
+                if (navNextSiblingOriginal) {
+                    navParentOriginal.insertBefore(navMenu, navNextSiblingOriginal);
+                } else {
+                    navParentOriginal.appendChild(navMenu);
+                }
             }
 
             hamburger.addEventListener('click', () => {

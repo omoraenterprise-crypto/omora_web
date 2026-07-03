@@ -41,7 +41,7 @@ body {
 .header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1200;
     padding: 18px 0;
     backdrop-filter: blur(12px);
     background: rgba(255,255,255,0.75);
@@ -192,7 +192,7 @@ body {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.4);
-    z-index: 1099;
+    z-index: 99998;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -449,7 +449,7 @@ body {
         padding: 100px 30px 30px;
         box-shadow: -10px 0 30px rgba(0,0,0,0.15);
         transition: right 0.35s ease;
-        z-index: 1100;
+        z-index: 99999;
     }
 
     .nav.active {
